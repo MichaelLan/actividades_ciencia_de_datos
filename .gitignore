@@ -1,1 +1,39 @@
 .atl/
+
+# Entornos y caches locales de Python/herramientas.
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ty_cache/
+.mypy_cache/
+.uv-cache/
+.ipynb_checkpoints/
+.coverage
+.coverage.*
+htmlcov/
+
+# Datos descargados y tablas procesadas: no versionar datasets grandes.
+# Conservar solo los marcadores; guardar diagnósticos pequeños en outputs/.
+/preprocesamiento/data/raw/*
+!/preprocesamiento/data/raw/.gitkeep
+/preprocesamiento/data/processed/*
+!/preprocesamiento/data/processed/.gitkeep
+
+# Intermedios voluminosos y temporales; outputs/*.json y guide.txt se conservan.
+/preprocesamiento/outputs/**/*.csv
+/preprocesamiento/outputs/**/*.parquet
+/preprocesamiento/outputs/**/*.arrow
+/preprocesamiento/outputs/**/*.npy
+/preprocesamiento/outputs/**/*.npz
+/preprocesamiento/outputs/tmp/
+/preprocesamiento/outputs/temp/
+/preprocesamiento/outputs/cache/
+*.tmp
+*.temp
+*.log
+*~
+
+# No ignorar informe/imagenes ni los diagnósticos JSON de outputs.
