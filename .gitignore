@@ -37,3 +37,6 @@ htmlcov/
 *~
 
 # No ignorar informe/imagenes ni los diagnósticos JSON de outputs.
+
+# Windows alternate data stream markers.
+*:Zone.Identifier
