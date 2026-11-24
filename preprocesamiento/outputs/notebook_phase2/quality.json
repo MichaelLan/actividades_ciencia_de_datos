@@ -1,0 +1,463 @@
+{
+  "missing": {
+    "hotel": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "is_canceled": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "lead_time": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "arrival_date_year": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "arrival_date_month": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "arrival_date_week_number": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "arrival_date_day_of_month": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "stays_in_weekend_nights": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "stays_in_week_nights": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "adults": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "children": {
+      "count": 4,
+      "percent": 0.0033503643521232934
+    },
+    "babies": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "meal": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "country": {
+      "count": 488,
+      "percent": 0.40874445095904177
+    },
+    "market_segment": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "distribution_channel": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "is_repeated_guest": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "previous_cancellations": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "previous_bookings_not_canceled": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "reserved_room_type": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "assigned_room_type": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "booking_changes": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "deposit_type": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "agent": {
+      "count": 16340,
+      "percent": 13.686238378423653
+    },
+    "company": {
+      "count": 112593,
+      "percent": 94.30689337465449
+    },
+    "days_in_waiting_list": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "customer_type": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "adr": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "required_car_parking_spaces": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "total_of_special_requests": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "reservation_status": {
+      "count": 0,
+      "percent": 0.0
+    },
+    "reservation_status_date": {
+      "count": 0,
+      "percent": 0.0
+    }
+  },
+  "missingness_by_group": {
+    "children": {
+      "hotel": [
+        {
+          "hotel": "City Hotel",
+          "rows": 79330,
+          "missing": 4,
+          "missing_percent": 0.005042228665069961
+        },
+        {
+          "hotel": "Resort Hotel",
+          "rows": 40060,
+          "missing": 0,
+          "missing_percent": 0.0
+        }
+      ],
+      "is_canceled": [
+        {
+          "is_canceled": 0,
+          "rows": 75166,
+          "missing": 0,
+          "missing_percent": 0.0
+        },
+        {
+          "is_canceled": 1,
+          "rows": 44224,
+          "missing": 4,
+          "missing_percent": 0.009044862518089725
+        }
+      ],
+      "market_segment": [
+        {
+          "market_segment": "Aviation",
+          "rows": 237,
+          "missing": 0,
+          "missing_percent": 0.0
+        },
+        {
+          "market_segment": "Complementary",
+          "rows": 743,
+          "missing": 0,
+          "missing_percent": 0.0
+        },
+        {
+          "market_segment": "Corporate",
+          "rows": 5295,
+          "missing": 0,
+          "missing_percent": 0.0
+        },
+        {
+          "market_segment": "Direct",
+          "rows": 12606,
+          "missing": 1,
+          "missing_percent": 0.007932730445819451
+        },
+        {
+          "market_segment": "Groups",
+          "rows": 19811,
+          "missing": 0,
+          "missing_percent": 0.0
+        },
+        {
+          "market_segment": "Offline TA/TO",
+          "rows": 24219,
+          "missing": 0,
+          "missing_percent": 0.0
+        },
+        {
+          "market_segment": "Online TA",
+          "rows": 56477,
+          "missing": 1,
+          "missing_percent": 0.001770632292791756
+        },
+        {
+          "market_segment": "Undefined",
+          "rows": 2,
+          "missing": 2,
+          "missing_percent": 100.0
+        }
+      ]
+    },
+    "country": {
+      "hotel": [
+        {
+          "hotel": "City Hotel",
+          "rows": 79330,
+          "missing": 24,
+          "missing_percent": 0.030253371990419768
+        },
+        {
+          "hotel": "Resort Hotel",
+          "rows": 40060,
+          "missing": 464,
+          "missing_percent": 1.1582626060908638
+        }
+      ],
+      "is_canceled": [
+        {
+          "is_canceled": 0,
+          "rows": 75166,
+          "missing": 421,
+          "missing_percent": 0.5600936593672671
+        },
+        {
+          "is_canceled": 1,
+          "rows": 44224,
+          "missing": 67,
+          "missing_percent": 0.1515014471780029
+        }
+      ],
+      "market_segment": [
+        {
+          "market_segment": "Aviation",
+          "rows": 237,
+          "missing": 0,
+          "missing_percent": 0.0
+        },
+        {
+          "market_segment": "Complementary",
+          "rows": 743,
+          "missing": 9,
+          "missing_percent": 1.2113055181695829
+        },
+        {
+          "market_segment": "Corporate",
+          "rows": 5295,
+          "missing": 184,
+          "missing_percent": 3.474976392823418
+        },
+        {
+          "market_segment": "Direct",
+          "rows": 12606,
+          "missing": 157,
+          "missing_percent": 1.2454386799936539
+        },
+        {
+          "market_segment": "Groups",
+          "rows": 19811,
+          "missing": 5,
+          "missing_percent": 0.02523850386149109
+        },
+        {
+          "market_segment": "Offline TA/TO",
+          "rows": 24219,
+          "missing": 59,
+          "missing_percent": 0.24361038853792477
+        },
+        {
+          "market_segment": "Online TA",
+          "rows": 56477,
+          "missing": 74,
+          "missing_percent": 0.13102678966658995
+        },
+        {
+          "market_segment": "Undefined",
+          "rows": 2,
+          "missing": 0,
+          "missing_percent": 0.0
+        }
+      ]
+    },
+    "agent": {
+      "hotel": [
+        {
+          "hotel": "City Hotel",
+          "rows": 79330,
+          "missing": 8131,
+          "missing_percent": 10.249590318920964
+        },
+        {
+          "hotel": "Resort Hotel",
+          "rows": 40060,
+          "missing": 8209,
+          "missing_percent": 20.4917623564653
+        }
+      ],
+      "is_canceled": [
+        {
+          "is_canceled": 0,
+          "rows": 75166,
+          "missing": 12310,
+          "missing_percent": 16.377085384349307
+        },
+        {
+          "is_canceled": 1,
+          "rows": 44224,
+          "missing": 4030,
+          "missing_percent": 9.1126989869754
+        }
+      ],
+      "market_segment": [
+        {
+          "market_segment": "Aviation",
+          "rows": 237,
+          "missing": 212,
+          "missing_percent": 89.45147679324894
+        },
+        {
+          "market_segment": "Complementary",
+          "rows": 743,
+          "missing": 640,
+          "missing_percent": 86.13728129205921
+        },
+        {
+          "market_segment": "Corporate",
+          "rows": 5295,
+          "missing": 4594,
+          "missing_percent": 86.7610953729934
+        },
+        {
+          "market_segment": "Direct",
+          "rows": 12606,
+          "missing": 6007,
+          "missing_percent": 47.651911788037445
+        },
+        {
+          "market_segment": "Groups",
+          "rows": 19811,
+          "missing": 4148,
+          "missing_percent": 20.937862803493008
+        },
+        {
+          "market_segment": "Offline TA/TO",
+          "rows": 24219,
+          "missing": 389,
+          "missing_percent": 1.606176968495809
+        },
+        {
+          "market_segment": "Online TA",
+          "rows": 56477,
+          "missing": 348,
+          "missing_percent": 0.6161800378915311
+        },
+        {
+          "market_segment": "Undefined",
+          "rows": 2,
+          "missing": 2,
+          "missing_percent": 100.0
+        }
+      ]
+    },
+    "company": {
+      "hotel": [
+        {
+          "hotel": "City Hotel",
+          "rows": 79330,
+          "missing": 75641,
+          "missing_percent": 95.34980461363924
+        },
+        {
+          "hotel": "Resort Hotel",
+          "rows": 40060,
+          "missing": 36952,
+          "missing_percent": 92.24163754368448
+        }
+      ],
+      "is_canceled": [
+        {
+          "is_canceled": 0,
+          "rows": 75166,
+          "missing": 69560,
+          "missing_percent": 92.5418407258601
+        },
+        {
+          "is_canceled": 1,
+          "rows": 44224,
+          "missing": 43033,
+          "missing_percent": 97.30689218523878
+        }
+      ],
+      "market_segment": [
+        {
+          "market_segment": "Aviation",
+          "rows": 237,
+          "missing": 25,
+          "missing_percent": 10.548523206751055
+        },
+        {
+          "market_segment": "Complementary",
+          "rows": 743,
+          "missing": 430,
+          "missing_percent": 57.87348586810229
+        },
+        {
+          "market_segment": "Corporate",
+          "rows": 5295,
+          "missing": 824,
+          "missing_percent": 15.561850802644003
+        },
+        {
+          "market_segment": "Direct",
+          "rows": 12606,
+          "missing": 12398,
+          "missing_percent": 98.34999206726955
+        },
+        {
+          "market_segment": "Groups",
+          "rows": 19811,
+          "missing": 18420,
+          "missing_percent": 92.97864822573317
+        },
+        {
+          "market_segment": "Offline TA/TO",
+          "rows": 24219,
+          "missing": 24113,
+          "missing_percent": 99.56232709855898
+        },
+        {
+          "market_segment": "Online TA",
+          "rows": 56477,
+          "missing": 56381,
+          "missing_percent": 99.83001929989199
+        },
+        {
+          "market_segment": "Undefined",
+          "rows": 2,
+          "missing": 2,
+          "missing_percent": 100.0
+        }
+      ]
+    }
+  },
+  "duplicates_extra": 31994,
+  "duplicate_member_rows": 40165,
+  "adr_iqr": {
+    "lower": -15.774999999999991,
+    "upper": 211.065,
+    "below": 0,
+    "above": 3793,
+    "zero": 1959
+  }
+}

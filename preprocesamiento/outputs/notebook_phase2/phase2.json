@@ -1,0 +1,1842 @@
+{
+  "seed": 42,
+  "tasks": {
+    "classification": {
+      "population_rows": 118564,
+      "target": "is_canceled",
+      "numeric_features": [
+        "lead_time",
+        "adults",
+        "children",
+        "babies",
+        "total_nights",
+        "previous_cancellations",
+        "previous_bookings_not_canceled"
+      ],
+      "categorical_features": [
+        "hotel",
+        "arrival_date_month",
+        "meal",
+        "market_segment",
+        "distribution_channel",
+        "is_repeated_guest",
+        "reserved_room_type",
+        "customer_type"
+      ],
+      "splits": {
+        "train": {
+          "rows": 88923,
+          "fraction": 0.75,
+          "cancellation_prevalence": 0.3725920178131642,
+          "unique_original_fingerprints": 64984,
+          "group_sizes": {
+            "groups": 64984,
+            "singleton_groups": 58880,
+            "repeated_groups": 6104,
+            "rows_in_repeated_groups": 30043,
+            "fraction_rows_in_repeated_groups": 0.3378540984897046,
+            "min": 1,
+            "median": 1.0,
+            "max": 180,
+            "histogram": [
+              {
+                "size": 1,
+                "groups": 58880,
+                "rows": 58880
+              },
+              {
+                "size": 2,
+                "groups": 3756,
+                "rows": 7512
+              },
+              {
+                "size": 3,
+                "groups": 721,
+                "rows": 2163
+              },
+              {
+                "size": 4,
+                "groups": 373,
+                "rows": 1492
+              },
+              {
+                "size": 5,
+                "groups": 206,
+                "rows": 1030
+              },
+              {
+                "size": 6,
+                "groups": 128,
+                "rows": 768
+              },
+              {
+                "size": 7,
+                "groups": 87,
+                "rows": 609
+              },
+              {
+                "size": 8,
+                "groups": 77,
+                "rows": 616
+              },
+              {
+                "size": 9,
+                "groups": 70,
+                "rows": 630
+              },
+              {
+                "size": 10,
+                "groups": 92,
+                "rows": 920
+              },
+              {
+                "size": 11,
+                "groups": 46,
+                "rows": 506
+              },
+              {
+                "size": 12,
+                "groups": 35,
+                "rows": 420
+              },
+              {
+                "size": 13,
+                "groups": 26,
+                "rows": 338
+              },
+              {
+                "size": 14,
+                "groups": 28,
+                "rows": 392
+              },
+              {
+                "size": 15,
+                "groups": 47,
+                "rows": 705
+              },
+              {
+                "size": 16,
+                "groups": 25,
+                "rows": 400
+              },
+              {
+                "size": 17,
+                "groups": 24,
+                "rows": 408
+              },
+              {
+                "size": 18,
+                "groups": 22,
+                "rows": 396
+              },
+              {
+                "size": 19,
+                "groups": 26,
+                "rows": 494
+              },
+              {
+                "size": 20,
+                "groups": 72,
+                "rows": 1440
+              },
+              {
+                "size": 21,
+                "groups": 7,
+                "rows": 147
+              },
+              {
+                "size": 22,
+                "groups": 5,
+                "rows": 110
+              },
+              {
+                "size": 23,
+                "groups": 14,
+                "rows": 322
+              },
+              {
+                "size": 24,
+                "groups": 23,
+                "rows": 552
+              },
+              {
+                "size": 25,
+                "groups": 26,
+                "rows": 650
+              },
+              {
+                "size": 26,
+                "groups": 7,
+                "rows": 182
+              },
+              {
+                "size": 27,
+                "groups": 9,
+                "rows": 243
+              },
+              {
+                "size": 28,
+                "groups": 9,
+                "rows": 252
+              },
+              {
+                "size": 29,
+                "groups": 28,
+                "rows": 812
+              },
+              {
+                "size": 30,
+                "groups": 31,
+                "rows": 930
+              },
+              {
+                "size": 31,
+                "groups": 1,
+                "rows": 31
+              },
+              {
+                "size": 32,
+                "groups": 3,
+                "rows": 96
+              },
+              {
+                "size": 33,
+                "groups": 3,
+                "rows": 99
+              },
+              {
+                "size": 34,
+                "groups": 6,
+                "rows": 204
+              },
+              {
+                "size": 35,
+                "groups": 2,
+                "rows": 70
+              },
+              {
+                "size": 36,
+                "groups": 2,
+                "rows": 72
+              },
+              {
+                "size": 39,
+                "groups": 3,
+                "rows": 117
+              },
+              {
+                "size": 40,
+                "groups": 6,
+                "rows": 240
+              },
+              {
+                "size": 41,
+                "groups": 2,
+                "rows": 82
+              },
+              {
+                "size": 42,
+                "groups": 3,
+                "rows": 126
+              },
+              {
+                "size": 44,
+                "groups": 1,
+                "rows": 44
+              },
+              {
+                "size": 45,
+                "groups": 1,
+                "rows": 45
+              },
+              {
+                "size": 46,
+                "groups": 1,
+                "rows": 46
+              },
+              {
+                "size": 47,
+                "groups": 2,
+                "rows": 94
+              },
+              {
+                "size": 48,
+                "groups": 1,
+                "rows": 48
+              },
+              {
+                "size": 49,
+                "groups": 4,
+                "rows": 196
+              },
+              {
+                "size": 50,
+                "groups": 8,
+                "rows": 400
+              },
+              {
+                "size": 52,
+                "groups": 2,
+                "rows": 104
+              },
+              {
+                "size": 54,
+                "groups": 1,
+                "rows": 54
+              },
+              {
+                "size": 55,
+                "groups": 1,
+                "rows": 55
+              },
+              {
+                "size": 56,
+                "groups": 1,
+                "rows": 56
+              },
+              {
+                "size": 58,
+                "groups": 3,
+                "rows": 174
+              },
+              {
+                "size": 59,
+                "groups": 2,
+                "rows": 118
+              },
+              {
+                "size": 60,
+                "groups": 3,
+                "rows": 180
+              },
+              {
+                "size": 62,
+                "groups": 1,
+                "rows": 62
+              },
+              {
+                "size": 64,
+                "groups": 1,
+                "rows": 64
+              },
+              {
+                "size": 65,
+                "groups": 3,
+                "rows": 195
+              },
+              {
+                "size": 69,
+                "groups": 2,
+                "rows": 138
+              },
+              {
+                "size": 70,
+                "groups": 2,
+                "rows": 140
+              },
+              {
+                "size": 79,
+                "groups": 3,
+                "rows": 237
+              },
+              {
+                "size": 84,
+                "groups": 1,
+                "rows": 84
+              },
+              {
+                "size": 85,
+                "groups": 3,
+                "rows": 255
+              },
+              {
+                "size": 99,
+                "groups": 3,
+                "rows": 297
+              },
+              {
+                "size": 100,
+                "groups": 1,
+                "rows": 100
+              },
+              {
+                "size": 101,
+                "groups": 1,
+                "rows": 101
+              },
+              {
+                "size": 180,
+                "groups": 1,
+                "rows": 180
+              }
+            ]
+          }
+        },
+        "validation": {
+          "rows": 14821,
+          "fraction": 0.12500421713167573,
+          "cancellation_prevalence": 0.3725794480804264,
+          "unique_original_fingerprints": 10827,
+          "group_sizes": {
+            "groups": 10827,
+            "singleton_groups": 9812,
+            "repeated_groups": 1015,
+            "rows_in_repeated_groups": 5009,
+            "fraction_rows_in_repeated_groups": 0.33796639902840564,
+            "min": 1,
+            "median": 1.0,
+            "max": 150,
+            "histogram": [
+              {
+                "size": 1,
+                "groups": 9812,
+                "rows": 9812
+              },
+              {
+                "size": 2,
+                "groups": 626,
+                "rows": 1252
+              },
+              {
+                "size": 3,
+                "groups": 120,
+                "rows": 360
+              },
+              {
+                "size": 4,
+                "groups": 62,
+                "rows": 248
+              },
+              {
+                "size": 5,
+                "groups": 35,
+                "rows": 175
+              },
+              {
+                "size": 6,
+                "groups": 20,
+                "rows": 120
+              },
+              {
+                "size": 7,
+                "groups": 14,
+                "rows": 98
+              },
+              {
+                "size": 8,
+                "groups": 13,
+                "rows": 104
+              },
+              {
+                "size": 9,
+                "groups": 12,
+                "rows": 108
+              },
+              {
+                "size": 10,
+                "groups": 15,
+                "rows": 150
+              },
+              {
+                "size": 11,
+                "groups": 7,
+                "rows": 77
+              },
+              {
+                "size": 12,
+                "groups": 6,
+                "rows": 72
+              },
+              {
+                "size": 13,
+                "groups": 5,
+                "rows": 65
+              },
+              {
+                "size": 14,
+                "groups": 4,
+                "rows": 56
+              },
+              {
+                "size": 15,
+                "groups": 9,
+                "rows": 135
+              },
+              {
+                "size": 16,
+                "groups": 3,
+                "rows": 48
+              },
+              {
+                "size": 17,
+                "groups": 5,
+                "rows": 85
+              },
+              {
+                "size": 18,
+                "groups": 3,
+                "rows": 54
+              },
+              {
+                "size": 19,
+                "groups": 4,
+                "rows": 76
+              },
+              {
+                "size": 20,
+                "groups": 12,
+                "rows": 240
+              },
+              {
+                "size": 21,
+                "groups": 1,
+                "rows": 21
+              },
+              {
+                "size": 22,
+                "groups": 2,
+                "rows": 44
+              },
+              {
+                "size": 23,
+                "groups": 2,
+                "rows": 46
+              },
+              {
+                "size": 24,
+                "groups": 3,
+                "rows": 72
+              },
+              {
+                "size": 25,
+                "groups": 4,
+                "rows": 100
+              },
+              {
+                "size": 26,
+                "groups": 2,
+                "rows": 52
+              },
+              {
+                "size": 27,
+                "groups": 1,
+                "rows": 27
+              },
+              {
+                "size": 28,
+                "groups": 2,
+                "rows": 56
+              },
+              {
+                "size": 29,
+                "groups": 5,
+                "rows": 145
+              },
+              {
+                "size": 30,
+                "groups": 5,
+                "rows": 150
+              },
+              {
+                "size": 34,
+                "groups": 1,
+                "rows": 34
+              },
+              {
+                "size": 38,
+                "groups": 1,
+                "rows": 38
+              },
+              {
+                "size": 40,
+                "groups": 2,
+                "rows": 80
+              },
+              {
+                "size": 46,
+                "groups": 1,
+                "rows": 46
+              },
+              {
+                "size": 50,
+                "groups": 1,
+                "rows": 50
+              },
+              {
+                "size": 51,
+                "groups": 1,
+                "rows": 51
+              },
+              {
+                "size": 53,
+                "groups": 1,
+                "rows": 53
+              },
+              {
+                "size": 58,
+                "groups": 1,
+                "rows": 58
+              },
+              {
+                "size": 60,
+                "groups": 1,
+                "rows": 60
+              },
+              {
+                "size": 69,
+                "groups": 1,
+                "rows": 69
+              },
+              {
+                "size": 84,
+                "groups": 1,
+                "rows": 84
+              },
+              {
+                "size": 150,
+                "groups": 1,
+                "rows": 150
+              }
+            ]
+          }
+        },
+        "test": {
+          "rows": 14820,
+          "fraction": 0.12499578286832429,
+          "cancellation_prevalence": 0.3726045883940621,
+          "unique_original_fingerprints": 10827,
+          "group_sizes": {
+            "groups": 10827,
+            "singleton_groups": 9812,
+            "repeated_groups": 1015,
+            "rows_in_repeated_groups": 5008,
+            "fraction_rows_in_repeated_groups": 0.3379217273954116,
+            "min": 1,
+            "median": 1.0,
+            "max": 109,
+            "histogram": [
+              {
+                "size": 1,
+                "groups": 9812,
+                "rows": 9812
+              },
+              {
+                "size": 2,
+                "groups": 625,
+                "rows": 1250
+              },
+              {
+                "size": 3,
+                "groups": 121,
+                "rows": 363
+              },
+              {
+                "size": 4,
+                "groups": 61,
+                "rows": 244
+              },
+              {
+                "size": 5,
+                "groups": 34,
+                "rows": 170
+              },
+              {
+                "size": 6,
+                "groups": 22,
+                "rows": 132
+              },
+              {
+                "size": 7,
+                "groups": 14,
+                "rows": 98
+              },
+              {
+                "size": 8,
+                "groups": 13,
+                "rows": 104
+              },
+              {
+                "size": 9,
+                "groups": 11,
+                "rows": 99
+              },
+              {
+                "size": 10,
+                "groups": 16,
+                "rows": 160
+              },
+              {
+                "size": 11,
+                "groups": 7,
+                "rows": 77
+              },
+              {
+                "size": 12,
+                "groups": 6,
+                "rows": 72
+              },
+              {
+                "size": 13,
+                "groups": 5,
+                "rows": 65
+              },
+              {
+                "size": 14,
+                "groups": 4,
+                "rows": 56
+              },
+              {
+                "size": 15,
+                "groups": 8,
+                "rows": 120
+              },
+              {
+                "size": 16,
+                "groups": 4,
+                "rows": 64
+              },
+              {
+                "size": 17,
+                "groups": 4,
+                "rows": 68
+              },
+              {
+                "size": 18,
+                "groups": 3,
+                "rows": 54
+              },
+              {
+                "size": 19,
+                "groups": 5,
+                "rows": 95
+              },
+              {
+                "size": 20,
+                "groups": 12,
+                "rows": 240
+              },
+              {
+                "size": 21,
+                "groups": 1,
+                "rows": 21
+              },
+              {
+                "size": 22,
+                "groups": 1,
+                "rows": 22
+              },
+              {
+                "size": 23,
+                "groups": 2,
+                "rows": 46
+              },
+              {
+                "size": 24,
+                "groups": 3,
+                "rows": 72
+              },
+              {
+                "size": 25,
+                "groups": 5,
+                "rows": 125
+              },
+              {
+                "size": 26,
+                "groups": 2,
+                "rows": 52
+              },
+              {
+                "size": 27,
+                "groups": 1,
+                "rows": 27
+              },
+              {
+                "size": 28,
+                "groups": 1,
+                "rows": 28
+              },
+              {
+                "size": 29,
+                "groups": 4,
+                "rows": 116
+              },
+              {
+                "size": 30,
+                "groups": 5,
+                "rows": 150
+              },
+              {
+                "size": 31,
+                "groups": 1,
+                "rows": 31
+              },
+              {
+                "size": 32,
+                "groups": 1,
+                "rows": 32
+              },
+              {
+                "size": 34,
+                "groups": 1,
+                "rows": 34
+              },
+              {
+                "size": 40,
+                "groups": 2,
+                "rows": 80
+              },
+              {
+                "size": 45,
+                "groups": 1,
+                "rows": 45
+              },
+              {
+                "size": 46,
+                "groups": 1,
+                "rows": 46
+              },
+              {
+                "size": 50,
+                "groups": 1,
+                "rows": 50
+              },
+              {
+                "size": 51,
+                "groups": 1,
+                "rows": 51
+              },
+              {
+                "size": 55,
+                "groups": 1,
+                "rows": 55
+              },
+              {
+                "size": 59,
+                "groups": 1,
+                "rows": 59
+              },
+              {
+                "size": 65,
+                "groups": 1,
+                "rows": 65
+              },
+              {
+                "size": 72,
+                "groups": 1,
+                "rows": 72
+              },
+              {
+                "size": 89,
+                "groups": 1,
+                "rows": 89
+              },
+              {
+                "size": 109,
+                "groups": 1,
+                "rows": 109
+              }
+            ]
+          }
+        }
+      },
+      "fingerprint_overlap": {
+        "train_validation": 0,
+        "train_test": 0,
+        "validation_test": 0
+      },
+      "x_pattern_overlap": {
+        "train_validation": 2934,
+        "train_test": 2848,
+        "validation_test": 807
+      },
+      "x_overlap_interpretation": "Different original reservations can share conservative X values. These are diagnosed, not removed or grouped by target-erased predictors. No exact original row crosses partitions.",
+      "redundancy_policy": "Keep adults, children and babies in X so known adults survive missing children; median-impute children on train only. Exclude total_guests from X: its exact sum is redundant when complete and its unknown total must not be independently imputed. Preserve total_guests (null when any component is unknown) in cleaned and task/split Parquet for traceability, not as a model predictor. Keep total_nights instead of its night components. Full OHE is redundant with intercept; LinearRegression uses least squares/SVD, not coefficient inference. Logistic uses default L2; no advanced regularized regression or tuning.",
+      "split_policy": "Target row weights 75/12.5/12.5 within each class (classification) or overall (regression); original-fingerprint groups sorted largest first with seed42 random tie-breaks, then assigned to greatest relative row deficit among bins where the group fits. Ties prefer larger target then fixed split order; group-size ties use seed42. If no bin fits, minimize the increase in squared relative target error. Validate train row fraction 70%-80% and nonempty holdouts before fitting/exporting. Intact groups can prevent exact target sizes; greedy assignment is not an exhaustive feasibility solver.",
+      "imbalance": {
+        "train_prevalence": 0.3725920178131642,
+        "severe_threshold_minority": 0.1,
+        "severe": false,
+        "treatment": "No resampling: minority is not severe (threshold 10%); regression conditioned on non-cancellation."
+      },
+      "metrics": {
+        "dummy": {
+          "validation": {
+            "accuracy": 0.6274205519195736,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "confusion_matrix": [
+              [
+                9299,
+                0
+              ],
+              [
+                5522,
+                0
+              ]
+            ],
+            "roc_auc": 0.5
+          },
+          "test": {
+            "accuracy": 0.6273954116059379,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "confusion_matrix": [
+              [
+                9298,
+                0
+              ],
+              [
+                5522,
+                0
+              ]
+            ],
+            "roc_auc": 0.5
+          }
+        },
+        "logistic": {
+          "validation": {
+            "accuracy": 0.7307199244315499,
+            "precision": 0.76423886779427,
+            "recall": 0.4009416877942774,
+            "f1": 0.5259532010927663,
+            "confusion_matrix": [
+              [
+                8616,
+                683
+              ],
+              [
+                3308,
+                2214
+              ]
+            ],
+            "roc_auc": 0.7540278814743275
+          },
+          "test": {
+            "accuracy": 0.7442645074224021,
+            "precision": 0.763542300669507,
+            "recall": 0.4543643607388627,
+            "f1": 0.5697093551316984,
+            "confusion_matrix": [
+              [
+                8521,
+                777
+              ],
+              [
+                3013,
+                2509
+              ]
+            ],
+            "roc_auc": 0.7746932545926504
+          }
+        }
+      },
+      "transforms": {
+        "dummy": {
+          "transformed_features": [
+            "numeric__lead_time",
+            "numeric__adults",
+            "numeric__children",
+            "numeric__babies",
+            "numeric__total_nights",
+            "numeric__previous_cancellations",
+            "numeric__previous_bookings_not_canceled",
+            "categorical__hotel_City Hotel",
+            "categorical__hotel_Resort Hotel",
+            "categorical__arrival_date_month_April",
+            "categorical__arrival_date_month_August",
+            "categorical__arrival_date_month_December",
+            "categorical__arrival_date_month_February",
+            "categorical__arrival_date_month_January",
+            "categorical__arrival_date_month_July",
+            "categorical__arrival_date_month_June",
+            "categorical__arrival_date_month_March",
+            "categorical__arrival_date_month_May",
+            "categorical__arrival_date_month_November",
+            "categorical__arrival_date_month_October",
+            "categorical__arrival_date_month_September",
+            "categorical__meal_BB",
+            "categorical__meal_FB",
+            "categorical__meal_HB",
+            "categorical__meal_SC",
+            "categorical__meal_Undefined",
+            "categorical__market_segment_Aviation",
+            "categorical__market_segment_Complementary",
+            "categorical__market_segment_Corporate",
+            "categorical__market_segment_Direct",
+            "categorical__market_segment_Groups",
+            "categorical__market_segment_Offline TA/TO",
+            "categorical__market_segment_Online TA",
+            "categorical__market_segment_Undefined",
+            "categorical__distribution_channel_Corporate",
+            "categorical__distribution_channel_Direct",
+            "categorical__distribution_channel_GDS",
+            "categorical__distribution_channel_TA/TO",
+            "categorical__distribution_channel_Undefined",
+            "categorical__is_repeated_guest_0",
+            "categorical__is_repeated_guest_1",
+            "categorical__reserved_room_type_A",
+            "categorical__reserved_room_type_B",
+            "categorical__reserved_room_type_C",
+            "categorical__reserved_room_type_D",
+            "categorical__reserved_room_type_E",
+            "categorical__reserved_room_type_F",
+            "categorical__reserved_room_type_G",
+            "categorical__reserved_room_type_H",
+            "categorical__reserved_room_type_L",
+            "categorical__customer_type_Contract",
+            "categorical__customer_type_Group",
+            "categorical__customer_type_Transient",
+            "categorical__customer_type_Transient-Party"
+          ],
+          "train_medians": [
+            70.0,
+            2.0,
+            0.0,
+            0.0,
+            3.0,
+            0.0,
+            0.0
+          ],
+          "train_scaling_mean": [
+            104.71858799185813,
+            1.864613204682703,
+            0.10489974472296257,
+            0.008040664395038404,
+            3.4451041912666014,
+            0.08436512488332602,
+            0.1346783171957761
+          ]
+        },
+        "logistic": {
+          "transformed_features": [
+            "numeric__lead_time",
+            "numeric__adults",
+            "numeric__children",
+            "numeric__babies",
+            "numeric__total_nights",
+            "numeric__previous_cancellations",
+            "numeric__previous_bookings_not_canceled",
+            "categorical__hotel_City Hotel",
+            "categorical__hotel_Resort Hotel",
+            "categorical__arrival_date_month_April",
+            "categorical__arrival_date_month_August",
+            "categorical__arrival_date_month_December",
+            "categorical__arrival_date_month_February",
+            "categorical__arrival_date_month_January",
+            "categorical__arrival_date_month_July",
+            "categorical__arrival_date_month_June",
+            "categorical__arrival_date_month_March",
+            "categorical__arrival_date_month_May",
+            "categorical__arrival_date_month_November",
+            "categorical__arrival_date_month_October",
+            "categorical__arrival_date_month_September",
+            "categorical__meal_BB",
+            "categorical__meal_FB",
+            "categorical__meal_HB",
+            "categorical__meal_SC",
+            "categorical__meal_Undefined",
+            "categorical__market_segment_Aviation",
+            "categorical__market_segment_Complementary",
+            "categorical__market_segment_Corporate",
+            "categorical__market_segment_Direct",
+            "categorical__market_segment_Groups",
+            "categorical__market_segment_Offline TA/TO",
+            "categorical__market_segment_Online TA",
+            "categorical__market_segment_Undefined",
+            "categorical__distribution_channel_Corporate",
+            "categorical__distribution_channel_Direct",
+            "categorical__distribution_channel_GDS",
+            "categorical__distribution_channel_TA/TO",
+            "categorical__distribution_channel_Undefined",
+            "categorical__is_repeated_guest_0",
+            "categorical__is_repeated_guest_1",
+            "categorical__reserved_room_type_A",
+            "categorical__reserved_room_type_B",
+            "categorical__reserved_room_type_C",
+            "categorical__reserved_room_type_D",
+            "categorical__reserved_room_type_E",
+            "categorical__reserved_room_type_F",
+            "categorical__reserved_room_type_G",
+            "categorical__reserved_room_type_H",
+            "categorical__reserved_room_type_L",
+            "categorical__customer_type_Contract",
+            "categorical__customer_type_Group",
+            "categorical__customer_type_Transient",
+            "categorical__customer_type_Transient-Party"
+          ],
+          "train_medians": [
+            70.0,
+            2.0,
+            0.0,
+            0.0,
+            3.0,
+            0.0,
+            0.0
+          ],
+          "train_scaling_mean": [
+            104.71858799185813,
+            1.864613204682703,
+            0.10489974472296257,
+            0.008040664395038404,
+            3.4451041912666014,
+            0.08436512488332602,
+            0.1346783171957761
+          ]
+        }
+      }
+    },
+    "regression": {
+      "population_rows": 74388,
+      "target": "adr",
+      "numeric_features": [
+        "lead_time",
+        "adults",
+        "children",
+        "babies",
+        "total_nights",
+        "previous_cancellations",
+        "previous_bookings_not_canceled"
+      ],
+      "categorical_features": [
+        "hotel",
+        "arrival_date_month",
+        "meal",
+        "market_segment",
+        "distribution_channel",
+        "is_repeated_guest",
+        "reserved_room_type",
+        "customer_type"
+      ],
+      "splits": {
+        "train": {
+          "rows": 55791,
+          "fraction": 0.75,
+          "cancellation_prevalence": 0.0,
+          "unique_original_fingerprints": 46991,
+          "group_sizes": {
+            "groups": 46991,
+            "singleton_groups": 43324,
+            "repeated_groups": 3667,
+            "rows_in_repeated_groups": 12467,
+            "fraction_rows_in_repeated_groups": 0.22345898083920346,
+            "min": 1,
+            "median": 1.0,
+            "max": 56,
+            "histogram": [
+              {
+                "size": 1,
+                "groups": 43324,
+                "rows": 43324
+              },
+              {
+                "size": 2,
+                "groups": 2467,
+                "rows": 4934
+              },
+              {
+                "size": 3,
+                "groups": 468,
+                "rows": 1404
+              },
+              {
+                "size": 4,
+                "groups": 224,
+                "rows": 896
+              },
+              {
+                "size": 5,
+                "groups": 123,
+                "rows": 615
+              },
+              {
+                "size": 6,
+                "groups": 73,
+                "rows": 438
+              },
+              {
+                "size": 7,
+                "groups": 55,
+                "rows": 385
+              },
+              {
+                "size": 8,
+                "groups": 46,
+                "rows": 368
+              },
+              {
+                "size": 9,
+                "groups": 40,
+                "rows": 360
+              },
+              {
+                "size": 10,
+                "groups": 24,
+                "rows": 240
+              },
+              {
+                "size": 11,
+                "groups": 28,
+                "rows": 308
+              },
+              {
+                "size": 12,
+                "groups": 11,
+                "rows": 132
+              },
+              {
+                "size": 13,
+                "groups": 14,
+                "rows": 182
+              },
+              {
+                "size": 14,
+                "groups": 11,
+                "rows": 154
+              },
+              {
+                "size": 15,
+                "groups": 7,
+                "rows": 105
+              },
+              {
+                "size": 16,
+                "groups": 14,
+                "rows": 224
+              },
+              {
+                "size": 17,
+                "groups": 5,
+                "rows": 85
+              },
+              {
+                "size": 18,
+                "groups": 9,
+                "rows": 162
+              },
+              {
+                "size": 19,
+                "groups": 7,
+                "rows": 133
+              },
+              {
+                "size": 20,
+                "groups": 3,
+                "rows": 60
+              },
+              {
+                "size": 21,
+                "groups": 4,
+                "rows": 84
+              },
+              {
+                "size": 22,
+                "groups": 1,
+                "rows": 22
+              },
+              {
+                "size": 23,
+                "groups": 2,
+                "rows": 46
+              },
+              {
+                "size": 24,
+                "groups": 2,
+                "rows": 48
+              },
+              {
+                "size": 26,
+                "groups": 2,
+                "rows": 52
+              },
+              {
+                "size": 27,
+                "groups": 2,
+                "rows": 54
+              },
+              {
+                "size": 28,
+                "groups": 2,
+                "rows": 56
+              },
+              {
+                "size": 29,
+                "groups": 3,
+                "rows": 87
+              },
+              {
+                "size": 32,
+                "groups": 2,
+                "rows": 64
+              },
+              {
+                "size": 33,
+                "groups": 2,
+                "rows": 66
+              },
+              {
+                "size": 34,
+                "groups": 1,
+                "rows": 34
+              },
+              {
+                "size": 35,
+                "groups": 1,
+                "rows": 35
+              },
+              {
+                "size": 39,
+                "groups": 1,
+                "rows": 39
+              },
+              {
+                "size": 40,
+                "groups": 1,
+                "rows": 40
+              },
+              {
+                "size": 41,
+                "groups": 2,
+                "rows": 82
+              },
+              {
+                "size": 42,
+                "groups": 2,
+                "rows": 84
+              },
+              {
+                "size": 44,
+                "groups": 1,
+                "rows": 44
+              },
+              {
+                "size": 46,
+                "groups": 1,
+                "rows": 46
+              },
+              {
+                "size": 47,
+                "groups": 1,
+                "rows": 47
+              },
+              {
+                "size": 48,
+                "groups": 1,
+                "rows": 48
+              },
+              {
+                "size": 49,
+                "groups": 2,
+                "rows": 98
+              },
+              {
+                "size": 50,
+                "groups": 1,
+                "rows": 50
+              },
+              {
+                "size": 56,
+                "groups": 1,
+                "rows": 56
+              }
+            ]
+          }
+        },
+        "validation": {
+          "rows": 9299,
+          "fraction": 0.12500672151422274,
+          "cancellation_prevalence": 0.0,
+          "unique_original_fingerprints": 7831,
+          "group_sizes": {
+            "groups": 7831,
+            "singleton_groups": 7221,
+            "repeated_groups": 610,
+            "rows_in_repeated_groups": 2078,
+            "fraction_rows_in_repeated_groups": 0.22346488869770942,
+            "min": 1,
+            "median": 1.0,
+            "max": 53,
+            "histogram": [
+              {
+                "size": 1,
+                "groups": 7221,
+                "rows": 7221
+              },
+              {
+                "size": 2,
+                "groups": 411,
+                "rows": 822
+              },
+              {
+                "size": 3,
+                "groups": 78,
+                "rows": 234
+              },
+              {
+                "size": 4,
+                "groups": 37,
+                "rows": 148
+              },
+              {
+                "size": 5,
+                "groups": 21,
+                "rows": 105
+              },
+              {
+                "size": 6,
+                "groups": 11,
+                "rows": 66
+              },
+              {
+                "size": 7,
+                "groups": 9,
+                "rows": 63
+              },
+              {
+                "size": 8,
+                "groups": 8,
+                "rows": 64
+              },
+              {
+                "size": 9,
+                "groups": 7,
+                "rows": 63
+              },
+              {
+                "size": 10,
+                "groups": 4,
+                "rows": 40
+              },
+              {
+                "size": 11,
+                "groups": 4,
+                "rows": 44
+              },
+              {
+                "size": 12,
+                "groups": 2,
+                "rows": 24
+              },
+              {
+                "size": 13,
+                "groups": 3,
+                "rows": 39
+              },
+              {
+                "size": 14,
+                "groups": 1,
+                "rows": 14
+              },
+              {
+                "size": 15,
+                "groups": 2,
+                "rows": 30
+              },
+              {
+                "size": 16,
+                "groups": 2,
+                "rows": 32
+              },
+              {
+                "size": 17,
+                "groups": 1,
+                "rows": 17
+              },
+              {
+                "size": 18,
+                "groups": 1,
+                "rows": 18
+              },
+              {
+                "size": 19,
+                "groups": 1,
+                "rows": 19
+              },
+              {
+                "size": 20,
+                "groups": 1,
+                "rows": 20
+              },
+              {
+                "size": 22,
+                "groups": 1,
+                "rows": 22
+              },
+              {
+                "size": 26,
+                "groups": 1,
+                "rows": 26
+              },
+              {
+                "size": 29,
+                "groups": 1,
+                "rows": 29
+              },
+              {
+                "size": 40,
+                "groups": 1,
+                "rows": 40
+              },
+              {
+                "size": 46,
+                "groups": 1,
+                "rows": 46
+              },
+              {
+                "size": 53,
+                "groups": 1,
+                "rows": 53
+              }
+            ]
+          }
+        },
+        "test": {
+          "rows": 9298,
+          "fraction": 0.12499327848577728,
+          "cancellation_prevalence": 0.0,
+          "unique_original_fingerprints": 7830,
+          "group_sizes": {
+            "groups": 7830,
+            "singleton_groups": 7220,
+            "repeated_groups": 610,
+            "rows_in_repeated_groups": 2078,
+            "fraction_rows_in_repeated_groups": 0.22348892234889223,
+            "min": 1,
+            "median": 1.0,
+            "max": 51,
+            "histogram": [
+              {
+                "size": 1,
+                "groups": 7220,
+                "rows": 7220
+              },
+              {
+                "size": 2,
+                "groups": 411,
+                "rows": 822
+              },
+              {
+                "size": 3,
+                "groups": 78,
+                "rows": 234
+              },
+              {
+                "size": 4,
+                "groups": 37,
+                "rows": 148
+              },
+              {
+                "size": 5,
+                "groups": 20,
+                "rows": 100
+              },
+              {
+                "size": 6,
+                "groups": 13,
+                "rows": 78
+              },
+              {
+                "size": 7,
+                "groups": 8,
+                "rows": 56
+              },
+              {
+                "size": 8,
+                "groups": 8,
+                "rows": 64
+              },
+              {
+                "size": 9,
+                "groups": 7,
+                "rows": 63
+              },
+              {
+                "size": 10,
+                "groups": 4,
+                "rows": 40
+              },
+              {
+                "size": 11,
+                "groups": 4,
+                "rows": 44
+              },
+              {
+                "size": 12,
+                "groups": 2,
+                "rows": 24
+              },
+              {
+                "size": 13,
+                "groups": 3,
+                "rows": 39
+              },
+              {
+                "size": 14,
+                "groups": 1,
+                "rows": 14
+              },
+              {
+                "size": 15,
+                "groups": 2,
+                "rows": 30
+              },
+              {
+                "size": 16,
+                "groups": 2,
+                "rows": 32
+              },
+              {
+                "size": 17,
+                "groups": 1,
+                "rows": 17
+              },
+              {
+                "size": 18,
+                "groups": 1,
+                "rows": 18
+              },
+              {
+                "size": 19,
+                "groups": 1,
+                "rows": 19
+              },
+              {
+                "size": 20,
+                "groups": 1,
+                "rows": 20
+              },
+              {
+                "size": 22,
+                "groups": 1,
+                "rows": 22
+              },
+              {
+                "size": 26,
+                "groups": 1,
+                "rows": 26
+              },
+              {
+                "size": 31,
+                "groups": 1,
+                "rows": 31
+              },
+              {
+                "size": 40,
+                "groups": 1,
+                "rows": 40
+              },
+              {
+                "size": 46,
+                "groups": 1,
+                "rows": 46
+              },
+              {
+                "size": 51,
+                "groups": 1,
+                "rows": 51
+              }
+            ]
+          }
+        }
+      },
+      "fingerprint_overlap": {
+        "train_validation": 0,
+        "train_test": 0,
+        "validation_test": 0
+      },
+      "x_pattern_overlap": {
+        "train_validation": 2073,
+        "train_test": 2058,
+        "validation_test": 587
+      },
+      "x_overlap_interpretation": "Different original reservations can share conservative X values. These are diagnosed, not removed or grouped by target-erased predictors. No exact original row crosses partitions.",
+      "redundancy_policy": "Keep adults, children and babies in X so known adults survive missing children; median-impute children on train only. Exclude total_guests from X: its exact sum is redundant when complete and its unknown total must not be independently imputed. Preserve total_guests (null when any component is unknown) in cleaned and task/split Parquet for traceability, not as a model predictor. Keep total_nights instead of its night components. Full OHE is redundant with intercept; LinearRegression uses least squares/SVD, not coefficient inference. Logistic uses default L2; no advanced regularized regression or tuning.",
+      "split_policy": "Target row weights 75/12.5/12.5 within each class (classification) or overall (regression); original-fingerprint groups sorted largest first with seed42 random tie-breaks, then assigned to greatest relative row deficit among bins where the group fits. Ties prefer larger target then fixed split order; group-size ties use seed42. If no bin fits, minimize the increase in squared relative target error. Validate train row fraction 70%-80% and nonempty holdouts before fitting/exporting. Intact groups can prevent exact target sizes; greedy assignment is not an exhaustive feasibility solver.",
+      "imbalance": {
+        "train_prevalence": 0.0,
+        "severe_threshold_minority": 0.1,
+        "severe": false,
+        "treatment": "No resampling: minority is not severe (threshold 10%); regression conditioned on non-cancellation."
+      },
+      "metrics": {
+        "dummy": {
+          "validation": {
+            "mae": 37.39264471020401,
+            "rmse": 49.1553696232623,
+            "r2": -5.464820561185135e-05
+          },
+          "test": {
+            "mae": 37.07037323659072,
+            "rmse": 49.109540722039334,
+            "r2": -2.4287331943595447e-05
+          }
+        },
+        "linear": {
+          "validation": {
+            "mae": 22.34694413575031,
+            "rmse": 31.393460463643393,
+            "r2": 0.5920939180969427
+          },
+          "test": {
+            "mae": 22.529626701934447,
+            "rmse": 31.3703220066847,
+            "r2": 0.5919468302415928
+          }
+        }
+      },
+      "transforms": {
+        "dummy": {
+          "transformed_features": [
+            "numeric__lead_time",
+            "numeric__adults",
+            "numeric__children",
+            "numeric__babies",
+            "numeric__total_nights",
+            "numeric__previous_cancellations",
+            "numeric__previous_bookings_not_canceled",
+            "categorical__hotel_City Hotel",
+            "categorical__hotel_Resort Hotel",
+            "categorical__arrival_date_month_April",
+            "categorical__arrival_date_month_August",
+            "categorical__arrival_date_month_December",
+            "categorical__arrival_date_month_February",
+            "categorical__arrival_date_month_January",
+            "categorical__arrival_date_month_July",
+            "categorical__arrival_date_month_June",
+            "categorical__arrival_date_month_March",
+            "categorical__arrival_date_month_May",
+            "categorical__arrival_date_month_November",
+            "categorical__arrival_date_month_October",
+            "categorical__arrival_date_month_September",
+            "categorical__meal_BB",
+            "categorical__meal_FB",
+            "categorical__meal_HB",
+            "categorical__meal_SC",
+            "categorical__meal_Undefined",
+            "categorical__market_segment_Aviation",
+            "categorical__market_segment_Complementary",
+            "categorical__market_segment_Corporate",
+            "categorical__market_segment_Direct",
+            "categorical__market_segment_Groups",
+            "categorical__market_segment_Offline TA/TO",
+            "categorical__market_segment_Online TA",
+            "categorical__distribution_channel_Corporate",
+            "categorical__distribution_channel_Direct",
+            "categorical__distribution_channel_GDS",
+            "categorical__distribution_channel_TA/TO",
+            "categorical__distribution_channel_Undefined",
+            "categorical__is_repeated_guest_0",
+            "categorical__is_repeated_guest_1",
+            "categorical__reserved_room_type_A",
+            "categorical__reserved_room_type_B",
+            "categorical__reserved_room_type_C",
+            "categorical__reserved_room_type_D",
+            "categorical__reserved_room_type_E",
+            "categorical__reserved_room_type_F",
+            "categorical__reserved_room_type_G",
+            "categorical__reserved_room_type_H",
+            "categorical__reserved_room_type_L",
+            "categorical__customer_type_Contract",
+            "categorical__customer_type_Group",
+            "categorical__customer_type_Transient",
+            "categorical__customer_type_Transient-Party"
+          ],
+          "train_medians": [
+            46.0,
+            2.0,
+            0.0,
+            0.0,
+            3.0,
+            0.0,
+            0.0
+          ],
+          "train_scaling_mean": [
+            80.86969224426879,
+            1.8366403183309137,
+            0.10241795271638794,
+            0.010216701618540625,
+            3.417128210643294,
+            0.016275026437955944,
+            0.20311519779175852
+          ]
+        },
+        "linear": {
+          "transformed_features": [
+            "numeric__lead_time",
+            "numeric__adults",
+            "numeric__children",
+            "numeric__babies",
+            "numeric__total_nights",
+            "numeric__previous_cancellations",
+            "numeric__previous_bookings_not_canceled",
+            "categorical__hotel_City Hotel",
+            "categorical__hotel_Resort Hotel",
+            "categorical__arrival_date_month_April",
+            "categorical__arrival_date_month_August",
+            "categorical__arrival_date_month_December",
+            "categorical__arrival_date_month_February",
+            "categorical__arrival_date_month_January",
+            "categorical__arrival_date_month_July",
+            "categorical__arrival_date_month_June",
+            "categorical__arrival_date_month_March",
+            "categorical__arrival_date_month_May",
+            "categorical__arrival_date_month_November",
+            "categorical__arrival_date_month_October",
+            "categorical__arrival_date_month_September",
+            "categorical__meal_BB",
+            "categorical__meal_FB",
+            "categorical__meal_HB",
+            "categorical__meal_SC",
+            "categorical__meal_Undefined",
+            "categorical__market_segment_Aviation",
+            "categorical__market_segment_Complementary",
+            "categorical__market_segment_Corporate",
+            "categorical__market_segment_Direct",
+            "categorical__market_segment_Groups",
+            "categorical__market_segment_Offline TA/TO",
+            "categorical__market_segment_Online TA",
+            "categorical__distribution_channel_Corporate",
+            "categorical__distribution_channel_Direct",
+            "categorical__distribution_channel_GDS",
+            "categorical__distribution_channel_TA/TO",
+            "categorical__distribution_channel_Undefined",
+            "categorical__is_repeated_guest_0",
+            "categorical__is_repeated_guest_1",
+            "categorical__reserved_room_type_A",
+            "categorical__reserved_room_type_B",
+            "categorical__reserved_room_type_C",
+            "categorical__reserved_room_type_D",
+            "categorical__reserved_room_type_E",
+            "categorical__reserved_room_type_F",
+            "categorical__reserved_room_type_G",
+            "categorical__reserved_room_type_H",
+            "categorical__reserved_room_type_L",
+            "categorical__customer_type_Contract",
+            "categorical__customer_type_Group",
+            "categorical__customer_type_Transient",
+            "categorical__customer_type_Transient-Party"
+          ],
+          "train_medians": [
+            46.0,
+            2.0,
+            0.0,
+            0.0,
+            3.0,
+            0.0,
+            0.0
+          ],
+          "train_scaling_mean": [
+            80.86969224426879,
+            1.8366403183309137,
+            0.10241795271638794,
+            0.010216701618540625,
+            3.417128210643294,
+            0.016275026437955944,
+            0.20311519779175852
+          ]
+        }
+      }
+    }
+  }
+}

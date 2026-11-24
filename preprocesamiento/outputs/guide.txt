@@ -1,0 +1,301 @@
+
+=== Página 1 ===
+UNIVERSIDAD DE LA SALLE
+Facultad de Ingenier´ıa / Maestr´ıa en inteligencia artificial
+GU´IA T´ECNICA DETALLADA
+PROYECTO INTEGRADOR DE CIENCIA DE DATOS E
+INTELIGENCIA ARTIFICIAL
+Asignatura: Ciencia de Datos
+Docente: Fabi´an Camilo Castro Riveros
+Periodo Acad´emico: 20 de octubre – 28 de noviembre de 2026
+Prop´osito del Documento: Esta gu´ıa establece los t´erminos de referencia estritos, especi-
+ficaciones t´ecnicas, algoritmos obligatorios, entregables por fase y r´ubricas de evaluaci´on para
+el desarrollo del Proyecto Integrador. No se permiten interpretaciones ambiguas respecto a los
+requerimientos de cada entrega.
+Bogot´a D.C., Colombia
+
+=== Página 2 ===
+Universidad de La Salle
+Gu´ıa Detallada del Proyecto Integrador
+1. Descripci´on General y Cronograma General
+El Proyecto Integrador abarca el ciclo de vida completo de un problema de Ciencia de Datos y
+Machine Learning: desde el planteamiento del problema de negocio/investigaci´on y la preparaci´on de
+datos reales, hasta el modelado avanzado (Supervisado, No Supervisado) y la puesta en producci´on
+de un Dashboard Interactivo.
+Fase
+Act.
+Entregables y Hitos del Aula Virtual
+Apertura
+Cierre / Entrega
+Peso
+Fase 1
+Act 1
+Conformaci´on de equipos y selecci´on del da-
+taset
+20 Oct
+25 Oct
+–
+Act 2
+Planteamiento del problema, EDA y pro-
+puesta (Entregable 1)
+26 Oct
+01 Nov
+20%
+Fase 2
+Act 3
+Limpieza e ingenier´ıa de variables
+03 Nov
+08 Nov
+–
+Act 4
+Partici´on de datos y Modelo Base / Baseline
+(Entregable 2)
+09 Nov
+15 Nov
+25%
+Fase 3
+Act 5
+Modelado avanzado (Regresi´on, Clasifica-
+ci´on, Clustering)
+16 Nov
+19 Nov
+–
+Act 6
+Evaluaci´on comparativa, optimizaci´on e in-
+terpretabilidad (Entregable 3)
+20 Nov
+22 Nov
+25%
+Fase 4
+Act 7
+Dashboard Interactivo y narrativa de datos
+23 Nov
+25 Nov
+–
+Act 8
+Redacci´on del Informe T´ecnico Final
+26 Nov
+27 Nov
+–
+Act 9
+Sustentaci´on oral y entrega final del reposi-
+torio (Entregable 4)
+28 Nov
+28 Nov
+30%
+Cuadro 1: Cronograma detallado de fases, actividades de aula virtual y ponderaciones.
+2. Requisitos Estrictos del Conjunto de Datos (Dataset Libre)
+El conjunto de datos debe ser de acceso libre y p´ublico, proveniente exclusivamente de repositorios
+acad´emicos, institucionales o de investigaci´on reconocidos.
+2.1. Repositorios Permitidos
+1. Kaggle Datasets (Repositorio p´ublico con licenciamiento CC o expl´ıcito).
+2. UCI Machine Learning Repository (https://archive.ics.uci.edu).
+3. Google Dataset Search (https://datasetsearch.research.google.com).
+4. Zenodo / IEEE DataPort (Repositorios de investigaci´on abierta).
+5. Portales Oficiales de Datos Abiertos (ej. Datos.gov.co, Data.gov, Eurostat).
+2.2. Restricciones y Especificaciones Obligatorias del Dataset
+■M´ınimo 600 registros (filas) de datos limpios.
+■M´ınimo 5 variables (columnas) que incluyan combinaci´on de tipos cuantitativos (con-
+tinuos/discretos) y cualitativos (nominales/ordinales).
+■Versatilidad de Objetivos: El dataset debe permitir extraer simult´aneamente:
+1. Una variable continua para un problema de Regresi´on.
+2. Una variable categ´orica o categ´orica derivada para un problema de Clasificaci´on.
+3. M´ultiples variables cuantitativas para la aplicaci´on de Clustering / Segmentaci´on No
+Supervisada.
+1
+
+=== Página 3 ===
+Universidad de La Salle
+Gu´ıa Detallada del Proyecto Integrador
+3. Especificaciones Detalladas por Fase y Entregable
+3.1. FASE 1: Planteamiento del Problema, Descripci´on y EDA (Entregable 1 –
+20%)
+Fechas de Trabajo: 20 Oct – 01 Nov
+—
+Fecha L´ımite de Entrega: Domingo 01 Noviembre
+Requerimientos T´ecnicos del Informe PDF:
+1. Formulaci´on del Problema y Objetivos:
+■Contextualizaci´on del dominio del problema e impacto potencial de la soluci´on anal´ıtica.
+■Formulaci´on de 1 pregunta de investigaci´on principal y 3 preguntas secundarias.
+■Objetivos del proyecto (1 General y 3 Espec´ıficos) en formato SMART.
+2. Ficha T´ecnica del Dataset:
+■Nombre del dataset, repositorio de origen, URL exacta de acceso, fecha de extracci´on y
+tipo de licencia libre.
+■Diccionario de datos exhaustivo: Nombre de la columna, tipo de variable (cuantitativa
+continua/discreta, cualitativa nominal/ordinal), descripci´on funcional y rango/valores
+permitidos.
+3. An´alisis Exploratorio de Datos (EDA) Exhaustivo:
+■An´alisis Univariado: Medidas de tendencia central, dispersi´on, asimetr´ıa y curtosis
+para variables cuantitativas. Tablas de frecuencias para variables cualitativas.
+■An´alisis Bivariado y Multivariado: Matriz de correlaci´on (Pearson o Spearman),
+diagramas de dispersi´on (scatter plots), y pruebas de independencia (χ2).
+■Diagn´ostico de Calidad de Datos: Porcentaje exacto de datos faltantes por variable,
+detecci´on de valores at´ıpicos (outliers) mediante regla IQR o Z-score, e identificaci´on de
+incoherencias o duplicados.
+3.2. FASE 2: Preprocesamiento, Ingenier´ıa de Variables y Modelo Base (Entre-
+gable 2 – 25%)
+Fechas de Trabajo: 03 Nov – 15 Nov
+—
+Fecha L´ımite de Entrega: Domingo 15 Noviembre
+Requerimientos T´ecnicos del Cuaderno (Jupyter Notebook / Script Executable):
+Limpieza e Imputaci´on de Datos:
+■Justificaci´on t´ecnica del tratamiento de valores faltantes (eliminaci´on vs. imputaci´on mediante
+media, mediana, KNNImputer o IterativeImputer). Prohibido imputar sin analizar el meca-
+nismo de falta (MCAR, MAR, MNAR).
+■Tratamiento razonado de valores at´ıpicos (outliers) mediante remoci´on, transformaci´on lo-
+gar´ıtmica o recorte por percentiles (winsorization).
+Ingenier´ıa y Transformaci´on de Caracter´ısticas:
+■Creaci´on de al menos 2 variables derivadas respaldadas en el conocimiento del dominio.
+■Codificaci´on de categ´oricas (One-Hot Encoding, Target Encoding u Ordinal Encoding) previ-
+niendo estrictamente la fuga de datos (Data Leakage).
+■Escalamiento/Estandarizaci´on (StandardScaler, MinMaxScaler o RobustScaler) ajustado ´unicamente
+sobre el conjunto de entrenamiento.
+Estrategia de Partici´on de Datos e Imbalance:
+■Divisi´on de datos en Entrenamiento (70–80%), Validaci´on y Prueba (20–30%). En
+clasificaci´on, aplicar divisi´on estratificada (Stratified Split).
+2
+
+=== Página 4 ===
+Universidad de La Salle
+Gu´ıa Detallada del Proyecto Integrador
+■Tratamiento de desbalance severo de clases si aplica (t´ecnicas SMOTE, ADASYN o ajuste de
+class weight).
+Modelo Base (Baseline):
+■Implementaci´on de un modelo de referencia sencillo (Regresi´on Lineal Simple o Regresi´on
+Log´ıstica b´asica / Dummy Classifier) para establecer el umbral m´ınimo de rendimiento.
+3
+
+=== Página 5 ===
+Universidad de La Salle
+Gu´ıa Detallada del Proyecto Integrador
+3.3. FASE 3: Modelado Avanzado, Clustering, Optimizaci´on e Interpretabilidad
+(Entregable 3 – 25%)
+Fechas de Trabajo: 16 Nov – 22 Nov
+—
+Fecha L´ımite de Entrega: Domingo 22 Noviembre
+En esta fase se deben entrenar, ajustar y evaluar tres bloques de algoritmos anal´ıticos:
+1. Modelos de Regresi´on (Predicci´on Continua):
+■Regresi´on Lineal Multivariable Regularizada (Lasso, Ridge o ElasticNet).
+■Algoritmo basado en ´arboles o ensambles: Random Forest Regressor o XGBoost / Gradient
+Boosting Regressor.
+2. Modelos de Clasificaci´on (Predicci´on Categ´orica):
+■Implementaci´on y comparaci´on de **dos algoritmos distintos** seleccionados entre: K-Nearest
+Neighbors (KNN), ´Arboles de Decisi´on, Random Forest, M´aquinas de Soporte Vectorial (SVM)
+o XGBoost.
+3. Modelos de Aprendizaje No Supervisado (Clustering / Segmentaci´on):
+■K-Means Clustering: Determinaci´on expl´ıcita del n´umero ´optimo de cl´usteres (K) mediante
+el M´etodo del Codo y el Coeficiente de Silueta.
+■Segundo Algoritmo No Supervisado: Implementaci´on de DBSCAN o Clustering Jer´arquico
+Agglomerative.
+■An´alisis e interpretaci´on profil´actica de los cl´usteres descubiertos y su valor pr´actico para el
+problema.
+Evaluaci´on de los modelos mediante m´etricas completas (R2, RMSE, MAE, Accu-
+racy, Precision, Recall, F1-Score, AUC-ROC, Silhouette Score).
+3.4. FASE 4: Dashboard Interactivo, Informe Final y Sustentaci´on (Entregable
+4 – 30%)
+Fechas de Trabajo: 23 Nov – 28 Nov
+—
+Fecha L´ımite de Entrega: S´abado 28 Noviembre
+1. Requerimientos T´ecnicos del Dashboard Interactivo:
+El producto principal es una **aplicaci´on web interactiva funcional y desplegada en vivo**.
+■Frameworks Permitidos: Python/R (Streamlit, Dash, Panel, Shiny) o software BI
+(Power BI, Tableau Public).
+■M´odulos Obligatorios del Dashboard:
+1. Filtros Din´amicos: Controles para segmentar por rangos de fechas, categor´ıas y va-
+riables num´ericas clave.
+2. Tarjetas KPI Executivas: Visualizaci´on de indicadores principales de rendimiento de
+la soluci´on.
+3. M´odulo de Predicci´on en Vivo: Interfaz interactiva para ingresar nuevos datos de
+entrada y obtener la predicci´on instant´anea del modelo supervisado.
+4. M´odulo de Segmentaci´on (Clustering): Gr´afico interactivo de dispersi´on (2D/3D
+o espacio PCA) que muestre la distribuci´on de los cl´usteres y sus perfiles num´ericos
+promedio.
+2. Informe T´ecnico Final y Repositorio Reproducible:
+■Documento escrito bajo estructura formal de art´ıculo cient´ıfico/t´ecnico (Resumen, Introduc-
+ci´on, Metodolog´ıa, Resultados, Discusi´on, Conclusiones y Trabajo Futuro).
+4
+
+=== Página 6 ===
+Universidad de La Salle
+Gu´ıa Detallada del Proyecto Integrador
+■Repositorio p´ublico (GitHub/GitLab) estructurado (/data, /notebooks, /src, /dashboard)
+que incluya el archivo requirements.txt o environment.yml con las versiones exactas para
+ejecuci´on inmediata.
+3. Sustentaci´on Oral (S´abado 28 Noviembre):
+■Exposici´on t´ecnica oral de 12 minutos por equipo + 5 minutos de preguntas directas del
+docente.
+■Demostraci´on en vivo del Dashboard Interactivo.
+5
+
+=== Página 7 ===
+Universidad de La Salle
+Gu´ıa Detallada del Proyecto Integrador
+4. R´ubrica General de Evaluaci´on
+Cada entregable ser´a evaluado cuantitativamente seg´un los criterios transversales de la Tabla 3.
+Criterio de Evaluaci´on
+Aspectos Espec´ıficos Evaluados
+Ponderaci´on
+Rigor
+Metodol´ogico
+y
+Justificaci´on de Decisio-
+nes
+Validez en la formulaci´on del problema, idoneidad del da-
+taset, justificaci´on te´orica en la selecci´on de modelos (Re-
+gresi´on, Clasificaci´on, Clustering, MLP) y correcto dise˜no
+de la partici´on de datos.
+35%
+Calidad y Reproducibili-
+dad del C´odigo
+C´odigo limpio, estructurado, comentado, libre de fuga de
+datos (data leakage), manejo adecuado de librer´ıas y eje-
+cutable de principio a fin mediante requirements.txt.
+25%
+An´alisis e Interpretaci´on
+de Resultados
+Profundidad en el diagn´ostico de m´etricas (R2, F1, Silue-
+ta, P´erdida en PyTorch, SHAP), detecci´on/prevenci´on de
+sobreajuste (overfitting) e impacto de negocio.
+25%
+Claridad de la Comunica-
+ci´on y Dashboard
+Calidad ejecutiva e interactividad del Dashboard, dise˜no
+visual de gr´aficos, coherencia del informe escrito y sol-
+vencia t´ecnica en la sustentaci´on oral.
+15%
+Cuadro 2: Matriz general de evaluaci´on de entregables.
+5. Lista de Chequeo para Estudiantes (Checklist de Cumplimiento)
+Verifique el cumplimiento estricto de cada ´ıtem antes de cargar su trabajo al aula virtual:
+Para la Fase 1 (Entregable 1 – 01 Nov):
+□¿El dataset proviene de un repositorio p´ublico permitido y NO es un dataset did´actico prohi-
+bido?
+□¿El dataset contiene m´as de 600 filas y 5 o m´as variables de distintos tipos?
+□¿El informe o el cuadernillo de Python incluye objetivos SMART, diccionario de variables y
+an´alisis EDA completo (univariado, bivariado, correlaciones y calidad de datos)?
+Para la Fase 2 (Entregable 2 – 15 Nov):
+□¿Se trataron e imputaron los valores faltantes y outliers con justificaci´on te´orica?
+□¿Se crearon al menos 2 variables derivadas y se aplic´o encoding/escalamiento sin data leakage?
+□¿Se dividieron los conjuntos en Train/Val/Test y se estableci´o el modelo baseline?
+Para la Fase 3 (Entregable 3 – 22 Nov):
+□¿Se implementaron y compararon modelos de Regresi´on Multivariable y Clasificaci´on?
+□¿Se aplic´o K-Means (evaluando codo y silueta) junto con un segundo algoritmo de Clustering
+(DBSCAN o Jer´arquico)?
+□¿Se dise˜n´o, entren´o y evalu´o un Perceptr´on Multicapa (MLP) en PyTorch graficando su funci´on
+de p´erdida?
+□¿Se realiz´o la b´usqueda de hiperpar´ametros con Cross-Validation y el an´alisis de interpreta-
+bilidad (SHAP/Feature Importance)?
+Para la Fase 4 (Entregable 4 – 28 Nov):
+□¿El Dashboard Interactivo incluye filtros din´amicos, tarjetas KPI, simulador de predicciones
+en vivo y mapa visual de cl´usteres?
+6
+
+=== Página 8 ===
+Universidad de La Salle
+Gu´ıa Detallada del Proyecto Integrador
+□¿El repositorio p´ublico contiene el archivo requirements.txt garantizando reproducibilidad
+total?
+□¿Est´an preparados todos los integrantes para la presentaci´on oral y demostraci´on en vivo de
+12 minutos?
+Universidad de La Salle – Facultad de Ingenier´ıa
+Docente: Fabi´an Camilo Castro Riveros
+7

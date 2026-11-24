@@ -1,0 +1,39 @@
+{
+  "python": "3.14.6",
+  "seed": 42,
+  "raw_sha256": "7c2ae42a7353905ea136e5c2287f17c92c5435826598bfbb8491c6f0c7b1fc06",
+  "versions": {
+    "polars": "2.1.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "matplotlib": "3.11.2",
+    "kagglehub": "1.0.3"
+  },
+  "source": "jessemostipak/hotel-booking-demand",
+  "license": "CC BY 4.0",
+  "original_download_date": null,
+  "rules": {
+    "negative_adr": 1,
+    "negative_counts": 0,
+    "zero_guests": 180,
+    "zero_nights": 715,
+    "missing_target": 0
+  },
+  "input_rows": 119390,
+  "retained_rows": 118564,
+  "populations": {
+    "classification": 118564,
+    "regression": 74388
+  },
+  "artifacts": [
+    "source.json",
+    "quality.json",
+    "cleaning.json",
+    "phase2.json",
+    "comparison.json",
+    "confusion.svg"
+  ],
+  "details": "phase2.json: splits, group histograms, X overlap, predictors, train statistics, imbalance and metrics; cleaning.json: rejected row IDs and reasons",
+  "interpretation": "Retrospective snapshot day before arrival; ADR conditional on non-cancellation, not initial quote; no causality or future validation"
+}

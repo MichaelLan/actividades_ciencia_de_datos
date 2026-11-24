@@ -1,0 +1,15 @@
+{
+  "python": "3.14.6",
+  "cells": 29,
+  "code_cells": 17,
+  "seconds": 8.511,
+  "errors": 0,
+  "isolated_without_src_or_pyproject": true,
+  "complete_task_metrics_equal": true,
+  "six_split_parquet_equal": true,
+  "canonical_hashes_preserved": 30,
+  "functions_with_docstrings": 13,
+  "scratch": "/tmp/gphxzMQG/hotel-parent-notebook-final-pm81dd65",
+  "notebook_sha256": "abc95a5d847a66fc02171278debce92bc83c3a2eb8f12c569eb18be6e681ef8b",
+  "code_sha256": "b588314455300d35837758a62936f49f9fc8837be439d6f08e9f1e5ba4791269"
+}

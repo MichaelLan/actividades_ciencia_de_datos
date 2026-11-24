@@ -1,0 +1,17 @@
+{
+  "available": true,
+  "reference_sha256": "99b5e3ffafbeb2540a4e6d245fc43ab33d31130cf146cbf2de1d94c40dbb0a6c",
+  "same_seed": true,
+  "tasks_equal": {
+    "classification": true,
+    "regression": true
+  },
+  "metrics_equal": {
+    "classification": true,
+    "regression": true
+  },
+  "splits_equal": {
+    "classification": true,
+    "regression": true
+  }
+}
