@@ -1,0 +1,126 @@
+{
+  "status": "verified",
+  "pdf": "informe/fase1.pdf",
+  "pages": 7,
+  "tables": 13,
+  "figure_captions": 6,
+  "figure_reading_order": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6"
+  ],
+  "blank_pages": [],
+  "outside_page_words": 0,
+  "internal_file_references": [],
+  "dictionary_entries": 32,
+  "quantitative_summaries_computed": 16,
+  "quantitative_summaries_presented": 16,
+  "calendar_components_reported_as_temporal": true,
+  "categorical_distributions": 15,
+  "chi_square_tests_presented": [
+    "hotel",
+    "meal",
+    "deposit_type"
+  ],
+  "chi_square_expected_min_all_above_5": true,
+  "input_sha256": {
+    "eda": "a97ff27e670c7b21c24af0f571e9ec8b1f7a3f69104a4f27f0bced68ce7287af",
+    "source": "4fe14405d91f95a869e96cae01dee1ff34734a20cd7284bfad881057474e2c58"
+  },
+  "pdf_sha256": "135ea22ffb6cff2c51b04b73099a9bfe67ac6e0842517503641c0e36f845bb89",
+  "page_checks": [
+    {
+      "page": 1,
+      "words": 705,
+      "outside_page": []
+    },
+    {
+      "page": 2,
+      "words": 487,
+      "outside_page": []
+    },
+    {
+      "page": 3,
+      "words": 587,
+      "outside_page": []
+    },
+    {
+      "page": 4,
+      "words": 326,
+      "outside_page": []
+    },
+    {
+      "page": 5,
+      "words": 598,
+      "outside_page": []
+    },
+    {
+      "page": 6,
+      "words": 497,
+      "outside_page": []
+    },
+    {
+      "page": 7,
+      "words": 289,
+      "outside_page": []
+    }
+  ],
+  "inspection_methodology": {
+    "engine": "PyMuPDF",
+    "render_dpi": 108,
+    "visual_pages_inspected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "visual_clipping_or_overlap_observed": false,
+    "table_font_pt": 8,
+    "figure_font_min_pt": 7.009537696838379,
+    "note": "All seven pages visually inspected; final pages 6/7 reinspected after calendar summary and rare-frequency percentage clarification."
+  },
+  "verification": {
+    "typst_compile": true,
+    "focused_pytest": "4 passed, 16 deselected",
+    "ruff_check": "passed",
+    "ruff_format_check": "passed",
+    "raw_data_crosscheck": "16 quantitative summaries, 32 missingness counts and percentages, 15 frequency distributions, 3 chi-square tests, duplicate count",
+    "statistical_calculation_changes": false,
+    "phase2_implementation_changes": false,
+    "independent_verifier": "36/36 full suite tests passed in isolated copy; independent numerical recomputation confirmed. Final calendar/rare-frequency table edits checked by coordinator."
+  },
+  "academic_coverage": {
+    "context": true,
+    "main_questions": 1,
+    "secondary_questions": 3,
+    "general_objectives": 1,
+    "specific_objectives": 3,
+    "smart_criteria_implicit": true,
+    "dataset_metadata_and_license": true,
+    "dictionary_complete": true,
+    "central_tendency_dispersion_skewness_kurtosis": true,
+    "qualitative_frequencies": true,
+    "correlations_scatter_chi_square": true,
+    "missingness_all_variables": "Four rows with counts/percentages and explicit zero for the remaining 28 dictionary variables",
+    "iqr_outliers_inconsistencies_duplicates": true,
+    "original_extraction_date": "Not verifiable; explicitly disclosed",
+    "calendar_complementary_summary": true
+  },
+  "editorial_summary": {
+    "original_pages": 12,
+    "original_tables": 32,
+    "original_figures": 7,
+    "removed": "Internal-file provenance, hashes, repeated limitations, redundant comparison tables",
+    "appendices": [
+      "32-variable dictionary",
+      "Grouped qualitative frequencies"
+    ],
+    "chi_square_scope": "Invalid sparse segment contrast retained as descriptive rates only; no recalculation or phase2 change"
+  }
+}
