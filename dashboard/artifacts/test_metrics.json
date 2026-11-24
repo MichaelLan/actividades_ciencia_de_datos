@@ -1,0 +1,55 @@
+{
+  "generated_at": "2026-11-24T03:22:35+00:00",
+  "note": "Single evaluation of fitted artifacts on the untouched test partition; no refit or tuning.",
+  "regression": {
+    "rows": 9298,
+    "random_forest": {
+      "mae": 15.08417008955497,
+      "rmse": 23.55688024968111,
+      "r2": 0.769901201452016
+    },
+    "rmse_ci95": [
+      22.668482470574574,
+      24.535841735485665
+    ]
+  },
+  "classification": {
+    "rows": 14820,
+    "prevalence": 0.3726045883940621,
+    "threshold": 0.5,
+    "random_forest": {
+      "accuracy": 0.7746963562753036,
+      "precision": 0.8762495691140986,
+      "recall": 0.4603404563563926,
+      "f1": 0.6035854208714235,
+      "roc_auc": 0.8327807583097672,
+      "confusion_matrix": [
+        [
+          8939,
+          359
+        ],
+        [
+          2980,
+          2542
+        ]
+      ]
+    },
+    "roc_auc_ci95": [
+      0.8260282889116721,
+      0.8400072077345384
+    ]
+  },
+  "clustering": {
+    "rows": 14820,
+    "silhouette": 0.34235286712646484,
+    "silhouette_full": 0.3331097662448883,
+    "sizes": {
+      "short_lead": 9060,
+      "long_lead": 4540,
+      "children": 1036,
+      "baby": 114,
+      "serial_cancellers": 48,
+      "loyal": 22
+    }
+  }
+}

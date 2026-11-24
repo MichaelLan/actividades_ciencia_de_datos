@@ -1,0 +1,33 @@
+[project]
+name = "hotel-dashboard"
+version = "0.1.0"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "joblib>=1.6.0",
+    "numpy>=2.5.5",
+    "pandas>=3.1.1",
+    "plotly>=7.1.0",
+    "polars>=2.1.0",
+    "pyarrow>=26.0.1",
+    "scikit-learn==1.7.2",
+    "streamlit>=1.67.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "ruff>=0.17.6",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+filterwarnings = ["ignore:.*ScriptRunContext.*"]
+
+[tool.ruff]
+line-length = 110
+extend-exclude = ["artifacts", "data"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["E501"]
