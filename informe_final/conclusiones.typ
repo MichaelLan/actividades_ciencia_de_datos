@@ -1,0 +1,5 @@
+#import "presentacion.typ": *
+= Conclusiones
+El proyecto recorrió el ciclo completo de un estudio de ciencia de datos sobre dos hoteles portugueses: diagnóstico, preparación sin fuga de información, modelado y comunicación. Random Forest fue el modelo más útil para ambas tareas. En la única evaluación en prueba obtuvo un $R^2$ de #fmt(test.regression.random_forest.r2, digits: 3) para la tarifa y un AUC de #fmt(test.classification.random_forest.roc_auc, digits: 3) para la cancelación, sin señales de sobreajuste relevantes. La regularización no mejoró al modelo lineal y las redes neuronales no superaron al bosque.
+
+Con el umbral de 0,50, el clasificador prioriza la precisión sobre la detección; elegir el umbral es una decisión de negocio que requiere los costes de cada error. La segmentación distingue sobre todo la demanda de corto plazo de la anticipada, que cancela con mayor frecuencia. El tablero pone estos resultados al alcance de un usuario no técnico y puede reconstruirse de principio a fin con versiones fijadas. Las conclusiones se limitan a estos dos hoteles, al periodo 2015–2017 y a un diseño retrospectivo.
