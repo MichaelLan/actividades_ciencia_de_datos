@@ -1,8 +1,41 @@
-# Hotel Booking Demand: exploración y modelos base
+# Hotel Booking Demand: de la exploración al dashboard interactivo
 
-Estudio académico reproducible de reservas hoteleras: calidad y relaciones del original, limpieza trazable y referencias sencillas para estimar la tarifa diaria media (ADR) y clasificar cancelaciones. Abarca **fases 1 y 2**; no incluye modelos avanzados, clustering, dashboard ni despliegue.
+Estudio académico reproducible de reservas hoteleras en cuatro fases: (1) análisis exploratorio y calidad de datos, (2) limpieza trazable y modelos base para estimar la tarifa diaria media (ADR) y clasificar cancelaciones, (3) modelos avanzados y clustering, y (4) dashboard interactivo en Streamlit con informe técnico final. Las secciones detalladas de abajo documentan sobre todo el pipeline de las fases 1 y 2; el dashboard tiene su propio [README](dashboard/README.md).
 
-El pipeline completo se ejecutó sobre el dataset real con salida 0. Están disponibles EDA, limpieza, particiones finales dentro del intervalo exigido y métricas de cuatro baselines, documentados abajo desde los JSON generados. Calidad local verificada: Ruff, formato, ty y **20 pruebas aprobadas** con Python **3.14.6**. El informe final está compilado e inspeccionado; las revisiones independientes técnica y académica terminaron sin bloqueadores. CI remota no ejecutada.
+Verificación de las fases 1 y 2: el pipeline completo se ejecutó sobre el dataset real con salida 0 y están disponibles EDA, limpieza, particiones finales dentro del intervalo exigido y métricas de cuatro baselines, documentados abajo desde los JSON generados. Calidad local verificada para ese pipeline: Ruff, formato, ty y **20 pruebas aprobadas** con Python **3.14.6**. CI remota no ejecutada.
+
+## Entregables
+
+- Aplicación interactiva (Streamlit): <https://hotelbookingdemand1.streamlit.app/>
+- Video de la fase 4: <https://youtu.be/FRCF1FqaAEw>
+- Informe técnico final: [`informe_final/informe_final.pdf`](informe_final/informe_final.pdf)
+- Informes y cuadernos previos:
+  - Fase 1: [`informe/fase1.pdf`](informe/fase1.pdf)
+  - Fase 2: [`preprocesamiento/fase2.ipynb`](preprocesamiento/fase2.ipynb) y [`fase_2/Fase_2_Hotel_Booking.ipynb`](fase_2/Fase_2_Hotel_Booking.ipynb)
+  - Fase 3: [`fase_3/Informe_Fase_3_Demanda_Hotelera.pdf`](fase_3/Informe_Fase_3_Demanda_Hotelera.pdf) y [`fase_3/Fase_3_Hotel_Booking.ipynb`](fase_3/Fase_3_Hotel_Booking.ipynb)
+
+## Estructura del repositorio
+
+El repositorio está organizado por fase; la tabla indica la equivalencia con la estructura exigida por la guía.
+
+| Guía | En este repositorio |
+|---|---|
+| `/data` | [`preprocesamiento/data/`](preprocesamiento/data/) (CSV original descargado por el pipeline, no versionado; particiones procesadas) y [`dashboard/data/`](dashboard/data/) (conjunto compacto versionado que usa la app, CC BY 4.0) |
+| `/notebooks` | [`preprocesamiento/fase2.ipynb`](preprocesamiento/fase2.ipynb), [`fase_2/`](fase_2/) y [`fase_3/`](fase_3/) |
+| `/src` | [`preprocesamiento/src/`](preprocesamiento/src/) (pipeline de las fases 1 y 2), [`dashboard/training/`](dashboard/training/) (entrenamiento y evaluación de los modelos finales) y [`dashboard/hotel_dashboard/`](dashboard/hotel_dashboard/) (lógica de la app) |
+| `/dashboard` | [`dashboard/`](dashboard/) (app Streamlit; ver [`dashboard/README.md`](dashboard/README.md)) |
+| `requirements.txt` | [`dashboard/requirements.txt`](dashboard/requirements.txt) (versiones exactas, Python 3.13) y [`preprocesamiento/requirements.txt`](preprocesamiento/requirements.txt) (exportado de `uv.lock` con hashes, para el pipeline de las fases 1 y 2) |
+| Informes | [`informe/`](informe/) (fuentes Typst del informe de la fase 1) e [`informe_final/`](informe_final/) (fuentes Typst del informe técnico final) |
+
+## Ejecutar el dashboard
+
+```bash
+cd dashboard
+uv sync
+uv run streamlit run app.py
+```
+
+Alternativa con Python 3.13: `pip install -r requirements.txt` y luego `streamlit run app.py`. Los detalles de reentrenamiento y pruebas están en [`dashboard/README.md`](dashboard/README.md).
 
 ## Datos y fuente científica
 
