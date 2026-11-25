@@ -14,6 +14,7 @@
 // URL pública del tablero (Streamlit Community Cloud). Si se deja vacía, el texto indica que
 // la aplicación solo se ejecuta localmente; con una dirección se muestra el enlace.
 #let dashboard-url = "https://hotelbookingdemand1.streamlit.app/"
+#let repo-url = "https://github.com/MichaelLan/actividades_ciencia_de_datos"
 #let dashboard-status = if dashboard-url == "" [
   La aplicación se ejecuta localmente; su publicación web está pendiente.
 ] else [
