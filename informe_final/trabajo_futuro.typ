@@ -1,7 +1,6 @@
 #import "presentacion.typ": *
 = Trabajo futuro
-- Validar con particiones temporales (entrenar con 2015–2016 y evaluar en 2017) para estimar el desempeño en reservas futuras.
-- Reconstruir los predictores al momento de crear la reserva, en colaboración con los hoteles, para convertir el clasificador en un sistema de alerta temprana.
-- Elegir el umbral de decisión con una matriz de costes de sobreventa y de habitaciones vacías, y calibrar las probabilidades.
-- Complementar la importancia por permutación con valores SHAP y dependencias parciales para describir la dirección de los efectos.
-- Ampliar la búsqueda de hiperparámetros más allá de tres configuraciones por modelo y guardar el ganador (`best_params_`) junto con los artefactos.
+- *Validación temporal:* entrenar con los primeros periodos y evaluar con llegadas posteriores, o con datos más recientes de los mismos hoteles, para estimar el rendimiento en reservas futuras.
+- *Predictores al registrar la reserva:* reconstruir, con información de los hoteles, el valor de cada variable en el momento del alta, de modo que el clasificador pueda usarse como alerta temprana.
+- *Umbral según costes:* elegir el umbral de decisión con los costes de la sobreventa y de las habitaciones vacías, y verificar la calibración de las probabilidades antes de interpretarlas como frecuencias.
+- *Aplicación:* incorporar nuevos datos y evaluar con usuarios del área de reservas si los indicadores y el simulador resultan útiles para sus decisiones.

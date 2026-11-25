@@ -1,5 +1,5 @@
-// Datos y utilidades de presentación. Las cifras proceden de datos.json, generado por
-// generate_report_data.py a partir de los JSON de las fases 1–4; no se escriben a mano.
+// Datos y utilidades de presentación. Las cifras proceden de datos.json, generado a partir de
+// los resultados verificados de las fases 1–4; no se escriben a mano.
 #let d = json("datos.json")
 #let m = d.metrics
 #let reg = m.regression.metrics
@@ -11,11 +11,14 @@
 #let test = d.test
 #let p2 = d.phase2.tasks
 
-// URL pública del tablero: sustituir "PENDIENTE" por la dirección de Streamlit Community Cloud.
-#let dashboard-url = "PENDIENTE"
-#let dashboard-link = if dashboard-url == "PENDIENTE" {
-  text(fill: rgb("#d03b3b"))[[URL de despliegue pendiente]]
-} else { link(dashboard-url, raw(dashboard-url)) }
+// URL pública del tablero (Streamlit Community Cloud). Si se deja vacía, el texto indica que
+// la aplicación solo se ejecuta localmente; con una dirección se muestra el enlace.
+#let dashboard-url = "https://hotelbookingdemand1.streamlit.app/"
+#let dashboard-status = if dashboard-url == "" [
+  La aplicación se ejecuta localmente; su publicación web está pendiente.
+] else [
+  La aplicación está publicada en #link(dashboard-url). Un video muestra un recorrido por sus funcionalidades @video_fase4.
+]
 
 // Número decimal con coma; enteros con espacio fino de miles a partir de 10 000.
 #let fmt(value, digits: 2, pad: true) = {

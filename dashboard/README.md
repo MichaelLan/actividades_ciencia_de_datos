@@ -94,6 +94,20 @@ Una vez fijados los modelos, la evaluación única en prueba carga los artefacto
 uv run python -m training.evaluate_test --processed-dir ../preprocesamiento/data/processed
 ```
 
+### Notas de alcance
+
+- La búsqueda de la Fase 3 evaluó 3 configuraciones por modelo: los bosques son los mejores de
+  esa muestra, no necesariamente los óptimos.
+- Los intervalos _bootstrap_ de `test_metrics.json` remuestrean filas e ignoran la dependencia
+  entre reservas idénticas agrupadas.
+- La interpretabilidad se basa en importancia por permutación (800 filas de validación,
+  3 repeticiones); no se calcularon valores SHAP.
+- La probabilidad de cancelación de la página de predicción es la salida del Random Forest; su
+  calibración no se ha verificado.
+- KPI «Valor mantenido» y «Valor cancelado»: suma de ADR × noches de las reservas mantenidas y
+  canceladas. El segundo es un valor estimado, no una pérdida realizada (no considera reventa
+  de habitaciones ni penalizaciones).
+
 ## Pruebas y estilo
 
 ```bash

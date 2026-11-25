@@ -8,14 +8,14 @@ Run from the ``dashboard`` folder so the shipped artifacts and its uv environmen
 Inputs (read only): Phase 1 EDA JSON, Phase 2 cleaning/partition JSON, the saved outputs of
 the executed Phase 3 notebook (``fase_3/Fase_3_Hotel_Booking.ipynb``), dashboard
 ``metrics.json``, ``test_metrics.json``, ``validation_predictions.parquet`` and
-``data/bookings.parquet``. Outputs: ``informe_final/datos.json`` (numbers injected in the
+``data/bookings.parquet``; Fig. 1 is rebuilt from the raw
+``preprocesamiento/data/raw/hotel_bookings.csv`` with the Phase 1 bins and limits. Outputs: ``informe_final/datos.json`` (numbers injected in the
 Typst sources) and SVG/PNG figures in ``informe_final/imagenes``. No model is fitted here.
 """
 
 import ast
 import json
 import re
-import shutil
 from pathlib import Path
 
 import matplotlib
@@ -26,17 +26,12 @@ import numpy as np  # noqa: E402
 import polars as pl  # noqa: E402
 from matplotlib.patches import FancyBboxPatch  # noqa: E402
 from matplotlib.ticker import FuncFormatter, ScalarFormatter  # noqa: E402
-from PIL import Image  # noqa: E402
 
 REPORT = Path(__file__).resolve().parent
 ROOT = REPORT.parent
 DASHBOARD = ROOT / "dashboard"
 FIGURES = REPORT / "imagenes"
 PHASE3_NOTEBOOK = ROOT / "fase_3" / "Fase_3_Hotel_Booking.ipynb"
-SCREENSHOTS = Path(
-    "/tmp/claude-1000/-home-michaellan-Development-master-ia-semestre-ii-data-science-proyectos/"
-    "9769815d-9160-423d-9d7b-b13b00adc891/scratchpad"
-)
 
 # Palette shared with dashboard/hotel_dashboard/theme.py (fixed categorical order).
 BLUE, ORANGE, GREEN, YELLOW, PINK, DARK_GREEN = (
@@ -225,6 +220,38 @@ def build_data() -> dict:
         "metrics": metrics,
         "test": test,
     }
+
+
+def figure_distributions() -> None:
+    """Phase 1 distribution figure (same raw data, bins and limits) with the report labels and palette."""
+    frame = pl.read_csv(
+        ROOT / "preprocesamiento/data/raw/hotel_bookings.csv",
+        null_values=["NULL", "NA", ""],
+        infer_schema_length=10000,
+    )
+    fig, axes = plt.subplots(1, 3, figsize=(7.1, 2.0), layout="constrained")
+    for ax, name, limit, label in zip(
+        axes[:2], ("adr", "lead_time"), (300, 500), ("ADR (u.m.)", "Anticipación (días)"), strict=True
+    ):
+        values = frame[name].drop_nulls().to_numpy()
+        ax.hist(values, bins=np.linspace(0, limit, 41), color=BLUE)
+        ax.set(xlabel=label, ylabel="Reservas", xlim=(0, limit))
+    hotels = ("City Hotel", "Resort Hotel")
+    boxes = axes[2].boxplot(
+        [frame.filter(pl.col("hotel") == h)["adr"].to_numpy() for h in hotels],
+        tick_labels=("Urbano", "Vacacional"),
+        showfliers=False,
+        patch_artist=True,
+        widths=0.5,
+        medianprops={"color": TEXT, "lw": 1.0},
+        whiskerprops={"color": TEXT_2, "lw": 0.8},
+        capprops={"color": TEXT_2, "lw": 0.8},
+    )
+    for patch, color in zip(boxes["boxes"], (BLUE, ORANGE), strict=True):
+        patch.set(facecolor=color, edgecolor=TEXT_2, alpha=0.85, lw=0.8)
+    axes[2].set(xlabel="Hotel", ylabel="ADR (u.m.)")
+    axes[2].grid(axis="x", visible=False)
+    save(fig, "distributions")
 
 
 def figure_pipeline() -> None:
@@ -464,28 +491,13 @@ def figure_pca() -> None:
     save(fig, "pca_clusters")
 
 
-def figure_dashboard() -> None:
-    """Crop and combine two dashboard screenshots (overview and live prediction)."""
-    overview = Image.open(SCREENSHOTS / "resumen_v2.png").convert("RGB").crop((300, 0, 1440, 1430))
-    prediction = Image.open(SCREENSHOTS / "prediccion.png").convert("RGB").crop((90, 60, 1440, 1350))
-    height = 1100
-    overview = overview.resize((round(overview.width * height / overview.height), height), Image.LANCZOS)
-    prediction = prediction.resize((round(prediction.width * height / prediction.height), height), Image.LANCZOS)
-    gap = 24
-    canvas = Image.new("RGB", (overview.width + prediction.width + gap, height), "white")
-    canvas.paste(overview, (0, 0))
-    canvas.paste(prediction, (overview.width + gap, 0))
-    canvas.save(FIGURES / "dashboard.png", optimize=True)
-
-
 def main() -> None:
     """Write datos.json, copy reused Phase 1 figures and render every new figure."""
     FIGURES.mkdir(exist_ok=True)
     style()
     data = build_data()
     (REPORT / "datos.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
-    for name in ("distributions",):
-        shutil.copy(ROOT / "informe/imagenes" / f"{name}.svg", FIGURES / f"{name}.svg")
+    figure_distributions()
     figure_pipeline()
     figure_models(data)
     figure_overfitting(data)
@@ -494,8 +506,6 @@ def main() -> None:
     figure_importance(data)
     figure_k_selection(data)
     figure_pca()
-    if SCREENSHOTS.exists():
-        figure_dashboard()
     print(f"Datos y figuras escritos en {REPORT}")
 
 
