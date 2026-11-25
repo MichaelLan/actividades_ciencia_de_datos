@@ -70,3 +70,22 @@ def business_kpis(frame: pl.DataFrame) -> BusinessKpis:
         mean_lead_time=row["mean_lead_time"],
         mean_nights=row["mean_nights"],
     )
+
+
+def monthly_kpis(frame: pl.DataFrame) -> pl.DataFrame:
+    """Per arrival month KPI series (same definitions as ``business_kpis``) for sparklines."""
+    stay_value = pl.col("adr") * pl.col("total_nights")
+    kept = pl.col("is_canceled") == 0
+    return (
+        frame.group_by(pl.col("arrival_date").dt.truncate("1mo").alias("month"))
+        .agg(
+            pl.len().alias("bookings"),
+            pl.col("is_canceled").mean().alias("cancel_rate"),
+            pl.col("adr").filter(kept).mean().alias("mean_adr"),
+            stay_value.filter(kept).sum().alias("revenue"),
+            stay_value.filter(~kept).sum().alias("lost_revenue"),
+            pl.col("lead_time").mean().alias("mean_lead_time"),
+        )
+        .sort("month")
+        .fill_null(0)
+    )

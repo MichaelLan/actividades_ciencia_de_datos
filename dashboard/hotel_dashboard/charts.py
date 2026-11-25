@@ -27,7 +27,7 @@ SHORT_LABELS = {
 def _finish(fig: go.Figure, title: str, height: int = 360, legend: bool = True) -> go.Figure:
     """Apply title, height and legend visibility consistently."""
     fig.update_layout(
-        title={"text": title}, height=height, showlegend=legend, margin={"t": 88 if legend else 56}
+        title={"text": title}, height=height, showlegend=legend, margin={"t": 92 if legend else 60}
     )
     return fig
 
@@ -64,8 +64,13 @@ def empty_figure(message: str = "Sin datos para la selección actual", height: i
     return fig
 
 
-def monthly_series(frame: pl.DataFrame, metric: str) -> go.Figure:
-    """Bookings per arrival month or cancellation rate per month, one line per hotel."""
+def hotel_short(code: str) -> str:
+    """Short Spanish hotel name for titles."""
+    return {"City Hotel": "hotel urbano", "Resort Hotel": "hotel vacacional"}.get(code, code)
+
+
+def monthly_series(frame: pl.DataFrame, metric: str, title: str | None = None) -> go.Figure:
+    """Bookings per arrival month or cancellation rate per month, one soft area per hotel."""
     if frame.is_empty():
         return empty_figure()
     monthly = (
@@ -86,9 +91,10 @@ def monthly_series(frame: pl.DataFrame, metric: str) -> go.Figure:
                 x=part["month"].to_list(),
                 y=values.to_list(),
                 name=_hotel_label(hotel),
-                mode="lines+markers",
-                line={"width": 2, "color": theme.HOTEL_COLORS[hotel], "shape": "spline", "smoothing": 0.4},
-                marker={"size": 6, "line": {"width": 1.5, "color": theme.SURFACE}},
+                mode="lines",
+                line={"width": 2.5, "color": theme.HOTEL_COLORS[hotel], "shape": "spline", "smoothing": 0.5},
+                fill="tozeroy",
+                fillgradient=theme.fade(theme.HOTEL_COLORS[hotel]),
                 customdata=[f"{MONTH_ABBR[m.month - 1]} {m.year}" for m in part["month"]],
                 hovertemplate="%{customdata}<br>"
                 + ("%{y:.1f} % canceladas" if is_rate else "%{y:,} reservas")
@@ -97,19 +103,23 @@ def monthly_series(frame: pl.DataFrame, metric: str) -> go.Figure:
         )
     months = sorted(set(monthly["month"].to_list()))
     fig.update_xaxes(
-        **_month_ticks(months, 6 if len(months) > 12 else 1), title="Mes de llegada", tickangle=0
+        **_month_ticks(months, 6 if len(months) > 12 else 1), title=None, tickangle=0, showgrid=False
     )
     if metric == "rate":
-        fig.update_yaxes(title="Tasa de cancelación (%)", rangemode="tozero", ticksuffix=" %")
-        title = "Tasa de cancelación por mes de llegada"
+        fig.update_yaxes(title=None, rangemode="tozero", ticksuffix=" %")
+        default = "Cancelación mensual por hotel"
     else:
-        fig.update_yaxes(title="Reservas", rangemode="tozero")
-        title = "Reservas por mes de llegada"
-    return _finish(fig, title)
+        fig.update_yaxes(title=None, rangemode="tozero")
+        default = "Reservas mensuales por hotel"
+    fig.update_layout(hovermode="x unified")
+    return _finish(fig, title or default)
 
 
 def rate_by_category(frame: pl.DataFrame, column: str, title: str, height: int = 340) -> go.Figure:
-    """Horizontal bars of cancellation rate per category, sorted, with value labels."""
+    """Sorted horizontal bars of cancellation rate; the riskiest category is highlighted.
+
+    ``title`` may contain ``{top}``, replaced by the label of the highest-rate category.
+    """
     grouped = (
         frame.group_by(pl.col(column).cast(pl.String))
         .agg(pl.len().alias("n"), pl.col("is_canceled").mean().alias("rate"))
@@ -119,15 +129,16 @@ def rate_by_category(frame: pl.DataFrame, column: str, title: str, height: int =
     if grouped.is_empty():
         return empty_figure(height=height)
     labels = [config.label(column, v) for v in grouped[column]]
+    colors = [theme.BLUE_RAMP[1]] * (len(labels) - 1) + [theme.TONES["risk"]["accent"]]
     fig = go.Figure(
         go.Bar(
             x=(grouped["rate"] * 100).to_list(),
             y=labels,
             orientation="h",
-            marker={"color": theme.CATEGORICAL[0], "cornerradius": 4},
+            marker={"color": colors, "cornerradius": 5},
             text=[fmt_pct(r) for r in grouped["rate"]],
             textposition="outside",
-            textfont={"color": theme.TEXT_SECONDARY, "size": 12},
+            textfont={"color": theme.TEXT, "size": 13},
             cliponaxis=False,
             customdata=[fmt_number(n) for n in grouped["n"]],
             hovertemplate="%{y}<br>%{x:.1f} % canceladas<br>%{customdata} reservas<extra></extra>",
@@ -135,11 +146,16 @@ def rate_by_category(frame: pl.DataFrame, column: str, title: str, height: int =
         )
     )
     fig.update_xaxes(
-        title="Tasa de cancelación (%)", ticksuffix=" %", range=[0, max(grouped["rate"].max() * 118, 10)]
+        title=None,
+        ticksuffix=" %",
+        showticklabels=False,
+        showgrid=False,
+        showline=False,
+        range=[0, max(grouped["rate"].max() * 120, 10)],
     )
     fig.update_yaxes(title=None, showgrid=False)
     fig.update_layout(bargap=0.4)
-    return _finish(fig, title, height=height, legend=False)
+    return _finish(fig, title.format(top=labels[-1]), height=height, legend=False)
 
 
 def rate_by_lead_time(frame: pl.DataFrame) -> go.Figure:
@@ -157,25 +173,30 @@ def rate_by_lead_time(frame: pl.DataFrame) -> go.Figure:
         )
         .sort("order")
     )
+    order = grouped["order"].to_list()
     fig = go.Figure(
         go.Bar(
             x=grouped["band"].cast(pl.String).to_list(),
             y=(grouped["rate"] * 100).to_list(),
-            marker={"color": theme.CATEGORICAL[0], "cornerradius": 4},
-            text=[fmt_pct(r) for r in grouped["rate"]],
+            marker={"color": [theme.RED_RAMP[i] for i in order], "cornerradius": 6},
+            text=[fmt_pct(r, 0) for r in grouped["rate"]],
             textposition="outside",
-            textfont={"color": theme.TEXT_SECONDARY, "size": 12},
+            textfont={"color": theme.TEXT, "size": 14},
             cliponaxis=False,
             customdata=[fmt_number(n) for n in grouped["n"]],
             hovertemplate="%{x} días<br>%{y:.1f} % canceladas<br>%{customdata} reservas<extra></extra>",
-            width=0.55,
+            width=0.62,
         )
     )
-    fig.update_xaxes(title="Anticipación (días)", showgrid=False, type="category")
+    fig.update_xaxes(title="Días de anticipación", showgrid=False, type="category")
     fig.update_yaxes(
-        title="Tasa de cancelación (%)", ticksuffix=" %", range=[0, max(grouped["rate"].max() * 118, 10)]
+        title=None,
+        ticksuffix=" %",
+        showticklabels=False,
+        showgrid=False,
+        range=[0, max(grouped["rate"].max() * 118, 10)],
     )
-    return _finish(fig, "Cancelación según anticipación de la reserva", legend=False)
+    return _finish(fig, "Más anticipación, más cancelación", legend=False)
 
 
 def adr_by_month_of_year(frame: pl.DataFrame) -> go.Figure:
@@ -200,18 +221,23 @@ def adr_by_month_of_year(frame: pl.DataFrame) -> go.Figure:
                 y=part["adr"].to_list(),
                 name=_hotel_label(hotel),
                 mode="lines+markers",
-                line={"width": 2, "color": theme.HOTEL_COLORS[hotel]},
-                marker={"size": 7, "line": {"width": 1.5, "color": theme.SURFACE}},
+                line={"width": 2.5, "color": theme.HOTEL_COLORS[hotel], "shape": "spline", "smoothing": 0.6},
+                marker={"size": 8, "line": {"width": 2, "color": theme.SURFACE}},
+                fill="tozeroy",
+                fillgradient=theme.fade(theme.HOTEL_COLORS[hotel]),
                 hovertemplate="%{x}<br>ADR mediano %{y:.1f}<extra>%{fullData.name}</extra>",
             )
         )
-    fig.update_xaxes(title="Mes de llegada", categoryorder="array", categoryarray=MONTH_ABBR, showgrid=False)
-    fig.update_yaxes(title="ADR mediano (u.m. por noche)", rangemode="tozero")
-    return _finish(fig, "Estacionalidad de la tarifa (reservas mantenidas)")
+    fig.update_xaxes(title=None, categoryorder="array", categoryarray=MONTH_ABBR, showgrid=False)
+    fig.update_yaxes(title="ADR mediano (u.m.)", rangemode="tozero")
+    return _finish(fig, "La tarifa sigue a la temporada")
 
 
 def adr_by_category(frame: pl.DataFrame, column: str, title: str) -> go.Figure:
-    """Box plot of ADR (kept bookings) per category, ordered by median."""
+    """Box plot of ADR (kept bookings) per category, ordered by median; the priciest is highlighted.
+
+    ``title`` may contain ``{top}``, replaced by the label of the highest-median category.
+    """
     kept = frame.filter(pl.col("is_canceled") == 0)
     counts = (
         kept.group_by(pl.col(column).cast(pl.String))
@@ -222,15 +248,17 @@ def adr_by_category(frame: pl.DataFrame, column: str, title: str) -> go.Figure:
     if counts.is_empty():
         return empty_figure()
     fig = go.Figure()
+    last = counts[column][-1]
     for value in counts[column]:
         values = kept.filter(pl.col(column).cast(pl.String) == value)["adr"]
+        color = theme.TONES["warm"]["accent"] if value == last else theme.BRAND
         fig.add_trace(
             go.Box(
                 x=values.to_numpy(),
                 name=config.label(column, value),
-                marker={"color": theme.CATEGORICAL[0], "size": 3, "opacity": 0.35},
-                line={"width": 1.5},
-                fillcolor="rgba(42,120,214,0.12)",
+                marker={"color": color, "size": 3, "opacity": 0.35},
+                line={"width": 1.5, "color": color},
+                fillcolor=theme.rgba(color, 0.22),
                 boxpoints=False,
                 orientation="h",
                 hoverinfo="x",
@@ -239,7 +267,7 @@ def adr_by_category(frame: pl.DataFrame, column: str, title: str) -> go.Figure:
     upper = float(kept["adr"].quantile(0.995) or 300)
     fig.update_xaxes(title="ADR (u.m. por noche)", range=[0, upper])
     fig.update_yaxes(showgrid=False)
-    return _finish(fig, title, height=360, legend=False)
+    return _finish(fig, title.format(top=config.label(column, last)), height=360, legend=False)
 
 
 def segment_scatter(
@@ -374,9 +402,17 @@ def segment_scatter(
         fig.update_xaxes(title=axis_titles[0], zeroline=True, zerolinecolor=theme.GRID)
         fig.update_yaxes(title=axis_titles[1], zeroline=True, zerolinecolor=theme.GRID)
         fig.update_layout(legend=legend)
-    fig = _finish(fig, "Reservas en el espacio de componentes principales", height=600 if three_d else 560)
+    fig = _finish(fig, "Mapa de segmentos (PCA)", height=600 if three_d else 560)
     fig.update_layout(margin={"t": 110, "r": 0, "l": 0, "b": 0} if three_d else {"t": 56, "r": 8})
     return fig
+
+
+def _wrap(text: str, width: int = 16) -> str:
+    """Break a long label into two lines at the space nearest the middle."""
+    if len(text) <= width or " " not in text:
+        return text
+    cut = min((i for i, c in enumerate(text) if c == " "), key=lambda i: abs(i - len(text) / 2))
+    return f"{text[:cut]}<br>{text[cut + 1 :]}"
 
 
 def segment_sizes(frame: pl.DataFrame) -> go.Figure:
@@ -389,11 +425,11 @@ def segment_sizes(frame: pl.DataFrame) -> go.Figure:
     fig = go.Figure(
         go.Bar(
             x=values,
-            y=[config.SEGMENTS[k]["name"] for k in keys],
+            y=[_wrap(config.SEGMENTS[k]["name"]) for k in keys],
             orientation="h",
             marker={
                 "color": [theme.CATEGORICAL[config.SEGMENT_ORDER.index(k)] for k in keys],
-                "cornerradius": 4,
+                "cornerradius": 5,
             },
             text=[fmt_pct(v / total) for v in values],
             textposition="outside",
@@ -405,13 +441,13 @@ def segment_sizes(frame: pl.DataFrame) -> go.Figure:
     )
     fig.update_xaxes(
         type="log",
-        title="Reservas (escala log.)",
+        title=None,
         tickangle=0,
         showticklabels=False,
         range=[0, np.log10(max(max(values), 10)) + 0.6],
     )
     fig.update_yaxes(showgrid=False)
-    fig = _finish(fig, "Tamaño de cada segmento", height=330, legend=False)
+    fig = _finish(fig, "Dos perfiles dominan", height=330, legend=False)
     fig.update_layout(margin={"r": 48})
     return fig
 
@@ -435,7 +471,7 @@ def profile_heatmap(profile: pl.DataFrame) -> go.Figure:
             y=names,
             text=text,
             texttemplate="%{text}",
-            textfont={"size": 12},
+            textfont={"size": 13},
             colorscale=theme.DIVERGING,
             zmid=0,
             zmin=-2.5,
@@ -443,7 +479,7 @@ def profile_heatmap(profile: pl.DataFrame) -> go.Figure:
             xgap=2,
             ygap=2,
             colorbar={
-                "title": {"text": "Desv. estándar<br>vs. media", "font": {"size": 11}},
+                "title": {"text": "Desv. típica<br>vs. media", "font": {"size": 12, "color": theme.MUTED}},
                 "thickness": 10,
                 "len": 0.9,
                 "tickfont": {"size": 10},
@@ -453,12 +489,14 @@ def profile_heatmap(profile: pl.DataFrame) -> go.Figure:
     )
     fig.update_xaxes(showgrid=False, showline=False, side="bottom", tickangle=0, tickfont={"size": 11})
     fig.update_yaxes(showgrid=False, autorange="reversed")
-    return _finish(fig, "Perfil numérico medio por segmento", height=380, legend=False)
+    return _finish(fig, "Qué distingue a cada segmento", height=400, legend=False)
 
 
 def importance_bars(items: list[dict], unit: str, title: str, top: int = 10) -> go.Figure:
     """Permutation importance bars with standard deviation whiskers."""
     items = sorted(items[:top], key=lambda d: d["mean"])
+    ramp = theme.BLUE_RAMP[::-1]
+    colors = [ramp[min(len(items) - 1 - i, len(ramp) - 1)] for i in range(len(items))]
     fig = go.Figure(
         go.Bar(
             x=[d["mean"] for d in items],
@@ -470,12 +508,12 @@ def importance_bars(items: list[dict], unit: str, title: str, top: int = 10) -> 
                 "color": theme.AXIS,
                 "thickness": 1.2,
             },
-            marker={"color": theme.CATEGORICAL[0], "cornerradius": 4},
+            marker={"color": colors, "cornerradius": 5},
             hovertemplate="%{y}<br>%{x:.3f} " + unit + "<extra></extra>",
             width=0.6,
         )
     )
-    fig.update_xaxes(title=f"Pérdida media al permutar ({unit})", rangemode="tozero")
+    fig.update_xaxes(title=f"Empeoramiento al permutar ({unit})", rangemode="tozero")
     fig.update_yaxes(showgrid=False)
     return _finish(fig, title, height=380, legend=False)
 
@@ -488,7 +526,7 @@ def actual_vs_predicted(actual: np.ndarray, predicted: np.ndarray) -> go.Figure:
             x=predicted,
             y=actual,
             mode="markers",
-            marker={"size": 5, "color": theme.CATEGORICAL[0], "opacity": 0.35},
+            marker={"size": 5, "color": theme.BRAND, "opacity": 0.3},
             hovertemplate="Predicha %{x:.1f}<br>Observada %{y:.1f}<extra></extra>",
             showlegend=False,
         )
@@ -499,13 +537,13 @@ def actual_vs_predicted(actual: np.ndarray, predicted: np.ndarray) -> go.Figure:
             y=[0, upper],
             mode="lines",
             name="Estimación exacta",
-            line={"color": theme.TEXT_SECONDARY, "width": 1.5},
+            line={"color": theme.TONES["loss"]["accent"], "width": 2, "dash": "dash"},
             hoverinfo="skip",
         )
     )
     fig.update_xaxes(title="ADR predicha (u.m.)", range=[0, upper])
     fig.update_yaxes(title="ADR observada (u.m.)", range=[0, upper])
-    return _finish(fig, "Observada frente a predicha (validación)", height=400)
+    return _finish(fig, "Las tarifas altas se subestiman", height=400)
 
 
 def residual_histogram(actual: np.ndarray, predicted: np.ndarray) -> go.Figure:
@@ -516,14 +554,14 @@ def residual_histogram(actual: np.ndarray, predicted: np.ndarray) -> go.Figure:
         go.Histogram(
             x=residual[(residual >= low) & (residual <= high)],
             nbinsx=60,
-            marker={"color": theme.CATEGORICAL[0], "line": {"width": 1, "color": theme.SURFACE}},
+            marker={"color": theme.BLUE_RAMP[2], "line": {"width": 1, "color": theme.SURFACE}},
             hovertemplate="Residuo %{x}<br>%{y:,} reservas<extra></extra>",
         )
     )
-    fig.add_vline(x=0, line={"color": theme.TEXT_SECONDARY, "width": 1.2})
-    fig.update_xaxes(title="Residuo (observada − predicha, u.m.)")
-    fig.update_yaxes(title="Reservas")
-    return _finish(fig, "Distribución del residuo", height=400, legend=False)
+    fig.add_vline(x=0, line={"color": theme.TONES["loss"]["accent"], "width": 2})
+    fig.update_xaxes(title="Residuo: observada − predicha (u.m.)")
+    fig.update_yaxes(title=None)
+    return _finish(fig, "Errores centrados en cero", height=400, legend=False)
 
 
 def confusion_heatmap(matrix: list[list[int]]) -> go.Figure:
@@ -531,19 +569,20 @@ def confusion_heatmap(matrix: list[list[int]]) -> go.Figure:
     cm = np.array(matrix)
     shares = cm / cm.sum(axis=1, keepdims=True)
     text = [[f"{fmt_number(cm[i, j])}<br>{fmt_pct(shares[i, j])}" for j in range(2)] for i in range(2)]
+    signed = np.where(np.eye(2, dtype=bool), shares, -shares)
     fig = go.Figure(
         go.Heatmap(
-            z=shares,
+            z=signed,
             x=["Predicha: mantenida", "Predicha: cancelada"],
             y=["Real: mantenida", "Real: cancelada"],
             text=text,
             texttemplate="%{text}",
-            textfont={"size": 14},
-            colorscale=[[0, "#f4f8fd"], [1, theme.BLUE_RAMP[4]]],
+            textfont={"size": 16},
+            colorscale=[[0, theme.RED_RAMP[4]], [0.5, "#f7f8fa"], [1, theme.BLUE_RAMP[4]]],
             showscale=False,
-            xgap=3,
-            ygap=3,
-            zmin=0,
+            xgap=4,
+            ygap=4,
+            zmin=-1,
             zmax=1,
             hovertemplate="%{y} · %{x}<br>%{text}<extra></extra>",
         )
@@ -551,7 +590,7 @@ def confusion_heatmap(matrix: list[list[int]]) -> go.Figure:
     fig.update_xaxes(showgrid=False, showline=False, side="top")
     fig.update_yaxes(showgrid=False, autorange="reversed")
     fig.update_layout(margin={"t": 80})
-    return _finish(fig, "Matriz de confusión", height=340, legend=False)
+    return _finish(fig, "Matriz de confusión", height=360, legend=False)
 
 
 def roc_curves(roc: dict, auc: dict) -> go.Figure:
@@ -565,7 +604,9 @@ def roc_curves(roc: dict, auc: dict) -> go.Figure:
                 y=roc[key]["tpr"],
                 mode="lines",
                 name=f"{label} (AUC {fmt_number(auc[key], 3)})",
-                line={"width": 2, "color": theme.CATEGORICAL[index]},
+                line={"width": 2.5, "color": theme.CATEGORICAL[index]},
+                fill="tozeroy" if index == 0 else None,
+                fillcolor=theme.rgba(theme.CATEGORICAL[index], 0.08),
                 hovertemplate="FPR %{x:.2f}<br>TPR %{y:.2f}<extra>" + label + "</extra>",
             )
         )
@@ -580,8 +621,8 @@ def roc_curves(roc: dict, auc: dict) -> go.Figure:
         )
     )
     fig.update_xaxes(title="Tasa de falsos positivos", range=[0, 1])
-    fig.update_yaxes(title="Tasa de verdaderos positivos (sensibilidad)", range=[0, 1.02])
-    return _finish(fig, "Curva ROC en validación", height=400)
+    fig.update_yaxes(title="Sensibilidad", range=[0, 1.02])
+    return _finish(fig, "Curva ROC", height=400)
 
 
 def k_selection(curve: list[dict], metric: str, chosen: int) -> go.Figure:
@@ -593,8 +634,10 @@ def k_selection(curve: list[dict], metric: str, chosen: int) -> go.Figure:
             x=ks,
             y=values,
             mode="lines+markers",
-            line={"width": 2, "color": theme.CATEGORICAL[0]},
-            marker={"size": 8, "line": {"width": 1.5, "color": theme.SURFACE}},
+            line={"width": 2.5, "color": theme.BRAND},
+            marker={"size": 8, "color": theme.BRAND, "line": {"width": 2, "color": theme.SURFACE}},
+            fill="tozeroy",
+            fillgradient=theme.fade(theme.BRAND, 0.16),
             hovertemplate="K=%{x}<br>%{y:,.3f}<extra></extra>",
             showlegend=False,
         )
@@ -608,7 +651,11 @@ def k_selection(curve: list[dict], metric: str, chosen: int) -> go.Figure:
             text=[f"K = {chosen}"],
             textposition="top center",
             textfont={"color": theme.TEXT},
-            marker={"size": 13, "color": theme.CATEGORICAL[1], "line": {"width": 2, "color": theme.SURFACE}},
+            marker={
+                "size": 15,
+                "color": theme.CATEGORICAL[1],
+                "line": {"width": 2.5, "color": theme.SURFACE},
+            },
             hoverinfo="skip",
             showlegend=False,
             cliponaxis=False,
@@ -617,49 +664,96 @@ def k_selection(curve: list[dict], metric: str, chosen: int) -> go.Figure:
     title = "Método del codo (inercia)" if metric == "inertia" else "Coeficiente de silueta"
     fig.update_xaxes(title="Número de grupos (K)", dtick=1)
     fig.update_yaxes(
-        title="Inercia" if metric == "inertia" else "Silueta (muestra de 2.500)",
+        title=None,
         tickformat=",.0f" if metric == "inertia" else None,
+        rangemode="tozero",
     )
     return _finish(fig, title, height=340, legend=False)
 
 
+RISK_BANDS = (0.3, 0.5)
+
+
+def risk_level(probability: float, threshold: float) -> tuple[str, str, str]:
+    """Risk label, accent colour and icon name for a cancellation probability."""
+    if probability >= threshold:
+        return "Riesgo alto", theme.STATUS["critical"], "warning"
+    if probability >= RISK_BANDS[0]:
+        return "Riesgo moderado", theme.STATUS["warning"], "error"
+    return "Riesgo bajo", theme.STATUS["good"], "check_circle"
+
+
 def probability_gauge(probability: float, threshold: float) -> go.Figure:
-    """Gauge of cancellation probability with the decision threshold marked."""
-    color = theme.STATUS["critical"] if probability >= threshold else theme.CATEGORICAL[0]
+    """Gauge of cancellation probability with low / moderate / high bands and the threshold."""
+    _, color, _ = risk_level(probability, threshold)
+    low = RISK_BANDS[0] * 100
     fig = go.Figure(
         go.Indicator(
             mode="gauge+number",
             value=probability * 100,
-            number={"suffix": " %", "valueformat": ".1f", "font": {"size": 44, "color": theme.TEXT}},
+            number={
+                "suffix": " %",
+                "valueformat": ".1f",
+                "font": {"size": 48, "color": theme.TEXT, "weight": 700},
+            },
             gauge={
+                "shape": "angular",
                 "axis": {
                     "range": [0, 100],
-                    "ticksuffix": " %",
-                    "tickwidth": 1,
-                    "tickcolor": theme.AXIS,
-                    "tickvals": [0, 25, 50, 75, 100],
-                    "tickfont": {"size": 11, "color": theme.TEXT_SECONDARY},
+                    "ticksuffix": "%",
+                    "tickwidth": 0,
+                    "tickcolor": "rgba(0,0,0,0)",
+                    "tickvals": [0, low, threshold * 100, 100],
+                    "tickfont": {"size": 12, "color": theme.TEXT_SECONDARY},
                 },
-                "bar": {"color": color, "thickness": 0.32},
-                "bgcolor": theme.SURFACE,
+                "bar": {"color": color, "thickness": 0.42},
+                "bgcolor": "rgba(0,0,0,0)",
                 "borderwidth": 0,
                 "steps": [
-                    {"range": [0, threshold * 100], "color": "#eef4fc"},
-                    {"range": [threshold * 100, 100], "color": "#fbeceb"},
+                    {"range": [0, low], "color": theme.rgba(theme.STATUS["good"], 0.18)},
+                    {"range": [low, threshold * 100], "color": theme.rgba(theme.STATUS["warning"], 0.2)},
+                    {"range": [threshold * 100, 100], "color": theme.rgba(theme.STATUS["critical"], 0.16)},
                 ],
                 "threshold": {
                     "line": {"color": theme.TEXT, "width": 3},
-                    "thickness": 0.9,
+                    "thickness": 0.95,
                     "value": threshold * 100,
                 },
             },
         )
     )
-    fig.update_layout(height=250, margin={"l": 40, "r": 40, "t": 24, "b": 0})
+    fig.update_layout(height=260, margin={"l": 36, "r": 36, "t": 28, "b": 8})
     return fig
 
 
-def adr_context(observed: pl.Series, estimate: float, low: float, high: float) -> go.Figure:
+def model_comparison(
+    values: dict[str, float], best: str, decimals: int, title: str, height: int = 380
+) -> go.Figure:
+    """Horizontal bars comparing one metric across models, with the deployed model highlighted."""
+    names = list(values)
+    colors = [theme.BRAND if name == best else "#d5dbe5" for name in names]
+    fig = go.Figure(
+        go.Bar(
+            x=list(values.values()),
+            y=names,
+            orientation="h",
+            marker={"color": colors, "cornerradius": 6},
+            text=[fmt_number(v, decimals) for v in values.values()],
+            textposition="outside",
+            textfont={"color": theme.TEXT, "size": 15},
+            cliponaxis=False,
+            hovertemplate="%{y}<br>%{text}<extra></extra>",
+            width=0.4,
+        )
+    )
+    fig.update_xaxes(
+        showticklabels=False, showgrid=False, showline=False, range=[0, max(values.values()) * 1.22]
+    )
+    fig.update_yaxes(showgrid=False, autorange="reversed", tickfont={"size": 14, "color": theme.TEXT})
+    return _finish(fig, title, height=height, legend=False)
+
+
+def adr_context(observed: pl.Series, estimate: float, low: float, high: float, title: str) -> go.Figure:
     """Histogram of comparable observed ADR with the model estimate overlaid."""
     if observed.is_empty():
         return empty_figure(height=260)
@@ -668,24 +762,23 @@ def adr_context(observed: pl.Series, estimate: float, low: float, high: float) -
         go.Histogram(
             x=observed.to_numpy(),
             xbins={"start": 0, "end": upper, "size": 5},
-            marker={"color": "#b7d3f6", "line": {"width": 1, "color": theme.SURFACE}},
+            marker={"color": theme.BLUE_RAMP[1], "line": {"width": 1, "color": theme.SURFACE}},
             hovertemplate="ADR %{x}<br>%{y:,} reservas<extra></extra>",
             showlegend=False,
         )
     )
-    fig.add_vrect(x0=low, x1=high, fillcolor=theme.CATEGORICAL[0], opacity=0.10, line_width=0)
-    fig.add_vline(x=estimate, line={"color": theme.CATEGORICAL[0], "width": 2.5})
+    fig.add_vrect(x0=low, x1=high, fillcolor=theme.TONES["warm"]["accent"], opacity=0.14, line_width=0)
+    fig.add_vline(x=estimate, line={"color": theme.TONES["loss"]["accent"], "width": 3})
     fig.add_annotation(
         x=estimate,
         y=1,
         yref="paper",
-        text=f"Estimación {fmt_number(estimate, 1)}",
+        text=f"<b>{fmt_number(estimate, 1)}</b>",
         showarrow=False,
         yanchor="bottom",
-        font={"color": theme.TEXT, "size": 12},
+        font={"color": theme.TEXT, "size": 14},
         bgcolor="rgba(255,255,255,0.85)",
     )
-    fig.update_xaxes(title="ADR observada en reservas comparables (u.m.)", range=[0, upper])
-    fig.update_yaxes(title="Reservas")
-    fig.update_layout(height=280, margin={"t": 30})
-    return fig
+    fig.update_xaxes(title="ADR (u.m. por noche)", range=[0, upper])
+    fig.update_yaxes(title=None)
+    return _finish(fig, title, height=300, legend=False)

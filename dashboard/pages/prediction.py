@@ -5,10 +5,10 @@ from functools import partial
 import polars as pl
 import streamlit as st
 
-from hotel_dashboard import charts, config, modeling, theme
+from hotel_dashboard import charts, config, modeling
 from hotel_dashboard.data import load_bookings, load_metrics
 from hotel_dashboard.kpis import fmt_number, fmt_pct
-from hotel_dashboard.ui import get_models, header, plot, segment_chip
+from hotel_dashboard.ui import card, chip, get_models, header, icon, plot, segment_chip, segment_color
 
 DEFAULTS = {
     "hotel": "City Hotel",
@@ -92,17 +92,16 @@ def reset() -> None:
 
 
 header(
-    "Simulador",
-    "Predicción en vivo de una reserva",
-    "Introduzca los datos disponibles al crear la reserva. El modelo de cancelación y el de "
-    "tarifa (ambos Random Forest) responden al instante; ninguno usa información posterior "
-    "a la reserva (habitación asignada, estado final ni tarifa cobrada).",
+    "Predicción en vivo",
+    "Ajuste la reserva: los modelos responden al instante",
+    "online_prediction",
+    [chip("Random Forest", "forest"), chip("Solo datos disponibles al reservar", "lock_clock")],
 )
 
 form_col, result_col = st.columns([5, 7], gap="large")
 
-with form_col, st.container(border=True):
-    st.markdown("**Estancia**")
+with form_col, card("form"):
+    st.markdown("**:material/hotel: Estancia**")
     a, b = st.columns(2)
     with a:
         select("hotel")
@@ -110,7 +109,7 @@ with form_col, st.container(border=True):
     with b:
         select("arrival_date_month")
         number("total_nights")
-    st.markdown("**Huéspedes**")
+    st.markdown("**:material/group: Huéspedes**")
     a, b, c = st.columns(3)
     with a:
         number("adults")
@@ -118,7 +117,7 @@ with form_col, st.container(border=True):
         number("children")
     with c:
         number("babies")
-    st.markdown("**Canal y producto**")
+    st.markdown("**:material/storefront: Canal y producto**")
     a, b = st.columns(2)
     with a:
         select("market_segment")
@@ -127,7 +126,7 @@ with form_col, st.container(border=True):
     with b:
         select("distribution_channel")
         select("meal")
-    st.markdown("**Historial del cliente**")
+    st.markdown("**:material/history: Historial del cliente**")
     a, b = st.columns(2)
     with a:
         number("previous_cancellations")
@@ -152,49 +151,50 @@ rf = metrics["classification"]["metrics"]["random_forest"]["validation"]
 prevalence = metrics["classification"]["validation_prevalence"]
 threshold = config.THRESHOLD
 
+level, color, glyph = charts.risk_level(probability, threshold)
+ratio = probability / prevalence
+alert = probability >= threshold
+mae = metrics["regression"]["metrics"]["random_forest"]["validation"]["mae"]
+
 with result_col:
-    with st.container(border=True):
-        st.markdown("**Probabilidad de cancelación**")
-        gauge_col, text_col = st.columns([6, 5], vertical_alignment="center")
+    with card("risk"):
+        st.markdown("**:material/event_busy: Probabilidad de cancelación**")
+        gauge_col, text_col = st.columns([7, 5], vertical_alignment="center")
         with gauge_col:
             plot(charts.probability_gauge(probability, threshold), key="gauge")
         with text_col:
-            if probability >= threshold:
-                level, color, icon = "Riesgo alto", theme.STATUS["critical"], "⚠"
-            elif probability >= 0.3:
-                level, color, icon = "Riesgo moderado", theme.STATUS["serious"], "●"
-            else:
-                level, color, icon = "Riesgo bajo", theme.STATUS["good"], "✓"
             st.markdown(
-                f'<span class="risk-badge" style="background:{color}1f;color:{theme.TEXT};'
-                f'border:1px solid {color}">{icon} {level}</span>',
+                f'<span class="risk-badge" style="--risk:{color}">{icon(glyph)}{level}</span>',
                 unsafe_allow_html=True,
             )
-            ratio = probability / prevalence
-            st.markdown(
-                f"Probabilidad estimada de **{fmt_pct(probability)}**, "
-                f"{fmt_number(ratio, 1)} veces la tasa media de validación ({fmt_pct(prevalence)})."
+            st.metric(
+                "Frente a la media",
+                f"{fmt_number(ratio, 1)}×",
+                help=f"Probabilidad estimada dividida por la tasa de cancelación en validación ({fmt_pct(prevalence)}).",
             )
-            decision = "**se marcaría como alerta**" if probability >= threshold else "no generaría alerta"
-            st.caption(
-                f"Con el umbral de {fmt_number(threshold, 2)} (línea negra) esta reserva {decision}. "
-                f"En validación, el {fmt_pct(rf['precision'], 0)} de las alertas fueron cancelaciones "
-                f"reales, pero solo se detectó el {fmt_pct(rf['recall'], 0)} de ellas: el umbral "
-                "prioriza pocas falsas alarmas."
+            st.metric(
+                "Decisión con umbral 0,50",
+                "Alerta" if alert else "Sin alerta",
+                help=(
+                    f"La reserva se marca como alerta si la probabilidad supera {fmt_number(threshold, 2)} "
+                    f"(línea negra). En validación, el {fmt_pct(rf['precision'], 0)} de las alertas fueron "
+                    f"cancelaciones reales y se detectó el {fmt_pct(rf['recall'], 0)} de ellas. "
+                    "Bandas: bajo < 30 %, moderado 30–50 %, alto ≥ 50 %."
+                ),
             )
 
-    with st.container(border=True):
-        st.markdown("**Tarifa diaria esperada (ADR)**")
+    with card("adr"):
+        st.markdown("**:material/sell: Tarifa diaria esperada (ADR)**")
         m1, m2, m3 = st.columns(3)
         m1.metric(
             "ADR estimada",
             f"{fmt_number(adr, 1)} u.m.",
-            help="Media de los árboles del Random Forest entrenado con reservas mantenidas.",
+            help=f"Media de los árboles del Random Forest (reservas mantenidas). Error típico en validación: MAE {fmt_number(mae, 1)} u.m.",
         )
         m2.metric(
             "Rango entre árboles",
             f"{fmt_number(adr_low, 0)} – {fmt_number(adr_high, 0)}",
-            help="Percentiles 10 y 90 de las predicciones individuales de los árboles; no es un intervalo de confianza formal.",
+            help="Percentiles 10 y 90 de las predicciones de los árboles; no es un intervalo de confianza formal.",
         )
         m3.metric(
             "Valor de la estancia",
@@ -209,23 +209,24 @@ with result_col:
         )
         same_room = kept.filter(pl.col("reserved_room_type").cast(pl.String) == booking["reserved_room_type"])
         comparable = same_room if same_room.height >= 30 else kept
-        plot(charts.adr_context(comparable["adr"], adr, adr_low, adr_high), key="adr_context")
-        scope = "mismo hotel, mes y tipo de habitación" if comparable is same_room else "mismo hotel y mes"
-        st.caption(
-            f"Histograma: {fmt_number(comparable.height)} reservas mantenidas con {scope}. "
-            f"Error típico del modelo en validación: MAE {fmt_number(metrics['regression']['metrics']['random_forest']['validation']['mae'], 1)} u.m."
+        scope = "mismo hotel, mes y habitación" if comparable is same_room else "mismo hotel y mes"
+        plot(
+            charts.adr_context(
+                comparable["adr"], adr, adr_low, adr_high, f"La estimación frente a reservas reales · {scope}"
+            ),
+            key="adr_context",
         )
 
-    with st.container(border=True):
-        index = config.SEGMENT_ORDER.index(segment)
+    with card("segment"):
         info = config.SEGMENTS[segment]
-        st.markdown("**Segmento de reserva (K-Means)**")
-        st.markdown(
-            f"{segment_chip(theme.CATEGORICAL[index])}<b>{info['name']}</b> — {info['description']}",
+        seg_col, link_col = st.columns([3, 2], vertical_alignment="center")
+        seg_col.markdown(
+            f'<div class="seg-inline">{segment_chip(segment_color(segment))}'
+            f'<div><div class="name">{info["name"]}</div><div class="tag">{info["tagline"]}</div></div></div>',
             unsafe_allow_html=True,
         )
-        st.page_link(
+        link_col.page_link(
             "pages/segmentation.py",
-            label="Ver la reserva en el mapa de segmentos",
+            label="Ver en el mapa de segmentos",
             icon=":material/bubble_chart:",
         )

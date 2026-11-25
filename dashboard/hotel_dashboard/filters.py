@@ -49,8 +49,7 @@ def render_filters(frame: pl.DataFrame) -> FilterSpec:
         st.session_state.setdefault(key, value)
 
     with st.sidebar:
-        st.markdown("#### Filtros")
-        st.caption("Aplican a los indicadores, gráficos y al mapa de segmentos.")
+        st.markdown("#### :material/tune: Filtros")
         dates = st.date_input(
             "Fecha de llegada",
             min_value=first,

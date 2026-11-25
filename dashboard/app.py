@@ -38,8 +38,8 @@ if page.title in {overview.title, segmentation.title}:
     with st.sidebar:
         st.divider()
         st.caption(
-            "Datos: Hotel Booking Demand (Antonio, de Almeida y Nunes, 2019), CC BY 4.0. "
-            "ADR en unidades monetarias de la fuente (u.m.)."
+            "Hotel Booking Demand · CC BY 4.0",
+            help="Antonio, de Almeida y Nunes (2019). ADR en unidades monetarias de la fuente (u.m.).",
         )
 
 page.run()

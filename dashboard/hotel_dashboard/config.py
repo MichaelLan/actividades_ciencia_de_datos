@@ -133,26 +133,32 @@ FEATURE_LABELS = {
 SEGMENTS: dict[str, dict[str, str]] = {
     "short_lead": {
         "name": "Planificación a corto plazo",
+        "tagline": "Parejas que reservan un mes antes",
         "description": "Parejas que reservan cerca de un mes antes y se quedan dos o tres noches. Es el núcleo del volumen.",
     },
     "long_lead": {
         "name": "Planificación anticipada",
+        "tagline": "Reservan unos siete meses antes",
         "description": "Reservas hechas con unos siete meses de antelación y estancias más largas; concentran más cancelaciones.",
     },
     "children": {
         "name": "Familias con niños",
+        "tagline": "Dos adultos con niños",
         "description": "Dos adultos con al menos un niño; estancias algo más largas y tarifas más altas por habitación.",
     },
     "baby": {
         "name": "Familias con bebé",
+        "tagline": "Viajan con bebé",
         "description": "Reservas con bebé; grupo pequeño con estancias de unas cuatro noches.",
     },
     "loyal": {
         "name": "Clientes fieles",
+        "tagline": "Repiten y casi no cancelan",
         "description": "Huéspedes con muchas reservas previas mantenidas; reservan con poca antelación y casi no cancelan.",
     },
     "serial_cancellers": {
         "name": "Historial de cancelaciones",
+        "tagline": "Nicho de riesgo extremo",
         "description": "Reservas con decenas de cancelaciones previas; grupo muy pequeño pero de riesgo extremo.",
     },
 }

@@ -5,27 +5,29 @@ import streamlit as st
 
 from hotel_dashboard import charts, config
 from hotel_dashboard.data import active_filter_count, load_bookings, load_metrics
-from hotel_dashboard.kpis import business_kpis, fmt_compact, fmt_number, fmt_pct
-from hotel_dashboard.ui import header, plot
+from hotel_dashboard.kpis import business_kpis, fmt_compact, fmt_number, fmt_pct, monthly_kpis
+from hotel_dashboard.ui import card, chip, header, kpi, plot, section, tile
 
 bookings = load_bookings()
 selection: pl.DataFrame = st.session_state.get("selection", bookings)
 spec = st.session_state.get("filter_spec")
 metrics = load_metrics()
 
-header(
-    "Hotel Booking Demand · Lisboa y Algarve, 2015–2017",
-    "Demanda, cancelaciones y tarifas",
-    "Panorama ejecutivo de las reservas de dos hoteles portugueses. Los filtros de la barra "
-    "lateral recalculan los indicadores y los gráficos; las métricas de los modelos se "
-    "calcularon en la partición de validación.",
-)
-
 n_filters = active_filter_count(spec, bookings) if spec else 0
-st.caption(
-    f"Mostrando **{fmt_number(selection.height)}** de {fmt_number(bookings.height)} reservas "
-    f"({fmt_pct(selection.height / bookings.height, 0)}) · "
-    + (f"{n_filters} filtro(s) activo(s)" if n_filters else "sin filtros activos")
+share = selection.height / bookings.height
+header(
+    "Demanda, cancelaciones y tarifas",
+    "Lisboa y Algarve · llegadas de julio de 2015 a agosto de 2017",
+    "hotel",
+    [
+        chip(f"<b>{fmt_number(selection.height)}</b> reservas", "calendar_month"),
+        chip(
+            f"<b>{n_filters}</b> filtro{'s' if n_filters != 1 else ''} · {fmt_pct(share, 0)}"
+            if n_filters
+            else "Sin filtros",
+            "filter_alt",
+        ),
+    ],
 )
 
 if selection.is_empty():
@@ -36,6 +38,7 @@ if selection.is_empty():
     st.stop()
 
 current, overall = business_kpis(selection), business_kpis(bookings)
+monthly = monthly_kpis(selection)
 filtered = selection.height < bookings.height
 
 
@@ -49,98 +52,70 @@ def delta(value: float | None, reference: float | None, kind: str) -> str | None
     return f"{fmt_number(diff, 1)} vs. total"
 
 
-st.subheader("Indicadores de negocio", anchor=False)
-cols = st.columns(6)
-cols[0].metric(
+cols = st.container(key="krow6").columns(6)
+kpi(
+    cols[0],
+    "bookings",
     "Reservas",
     fmt_number(current.bookings),
-    border=True,
-    help="Reservas que cumplen los filtros, incluidas las canceladas.",
+    "brand",
+    "event_available",
+    "Reservas que cumplen los filtros, incluidas las canceladas. Línea: evolución mensual.",
+    chart=monthly["bookings"],
 )
-cols[1].metric(
+kpi(
+    cols[1],
+    "cancel",
     "Cancelación",
     fmt_pct(current.cancel_rate),
+    "risk",
+    "event_busy",
+    "Proporción de reservas canceladas antes de la llegada.",
     delta(current.cancel_rate, overall.cancel_rate, "pp"),
-    delta_color="inverse",
-    border=True,
-    help="Proporción de reservas canceladas antes de la llegada.",
+    monthly["cancel_rate"],
 )
-cols[2].metric(
+kpi(
+    cols[2],
+    "adr",
     "ADR medio",
     fmt_number(current.mean_adr, 1),
+    "warm",
+    "sell",
+    "Tarifa diaria media de las reservas mantenidas (u.m. por noche).",
     delta(current.mean_adr, overall.mean_adr, "abs"),
-    border=True,
-    help="Tarifa diaria media de las reservas mantenidas (u.m. por noche).",
+    monthly["mean_adr"],
 )
-cols[3].metric(
-    "Ingreso",
+kpi(
+    cols[3],
+    "revenue",
+    "Valor mantenido",
     fmt_compact(current.revenue),
-    border=True,
-    help="Ingreso estimado: suma de ADR × noches de las reservas mantenidas (u.m.).",
+    "positive",
+    "payments",
+    "Valor estimado de las reservas mantenidas: suma de ADR × noches (u.m.). No incluye extras ni descuentos.",
+    chart=monthly["revenue"],
 )
-cols[4].metric(
-    "Ingreso perdido",
+kpi(
+    cols[4],
+    "lost",
+    "Valor cancelado",
     fmt_compact(current.lost_revenue),
-    border=True,
-    help="ADR × noches de las reservas canceladas: valor que no llegó a materializarse.",
+    "loss",
+    "money_off",
+    "Valor estimado de las reservas canceladas: ADR × noches (u.m.). No es una pérdida realizada: "
+    "no considera reventa de habitaciones ni penalizaciones.",
+    chart=monthly["lost_revenue"],
 )
-cols[5].metric(
+kpi(
+    cols[5],
+    "lead",
     "Anticipación",
     f"{fmt_number(current.mean_lead_time, 0)} d",
+    "violet",
+    "schedule",
+    "Media de días entre la creación de la reserva y la llegada prevista.",
     delta(current.mean_lead_time, overall.mean_lead_time, "abs"),
-    delta_color="off",
-    border=True,
-    help="Media de días entre la creación de la reserva y la llegada prevista.",
-)
-
-reg = metrics["regression"]["metrics"]
-cls = metrics["classification"]["metrics"]
-clu = metrics["clustering"]
-st.subheader("Desempeño de los modelos", anchor=False)
-st.caption(
-    "Validación: 9.299 reservas mantenidas (ADR) y 14.821 reservas (cancelación y segmentación). Las diferencias se miden frente al modelo de referencia."
-)
-cols = st.columns(5)
-rf_reg, lin_reg = reg["random_forest"]["validation"], reg["linear"]["validation"]
-rf_cls, log_cls = cls["random_forest"]["validation"], cls["logistic"]["validation"]
-cols[0].metric(
-    "R² · tarifa (ADR)",
-    fmt_number(rf_reg["r2"], 3),
-    f"{fmt_number(rf_reg['r2'] - lin_reg['r2'], 3)} vs. lineal",
-    border=True,
-    help="Random Forest. Proporción de la varianza de la tarifa explicada.",
-)
-cols[1].metric(
-    "RMSE · tarifa (ADR)",
-    fmt_number(rf_reg["rmse"], 2),
-    f"{fmt_number(rf_reg['rmse'] - lin_reg['rmse'], 2)} vs. lineal",
-    delta_color="inverse",
-    delta_arrow="off",
-    border=True,
-    help="Raíz del error cuadrático medio, en u.m. por noche.",
-)
-cols[2].metric(
-    "AUC · cancelación",
-    fmt_number(rf_cls["roc_auc"], 3),
-    f"{fmt_number(rf_cls['roc_auc'] - log_cls['roc_auc'], 3)} vs. logística",
-    border=True,
-    help="Random Forest. Capacidad de ordenar reservas por riesgo (0,5 = azar).",
-)
-cols[3].metric(
-    "F1 · cancelación",
-    fmt_number(rf_cls["f1"], 3),
-    f"{fmt_number(rf_cls['f1'] - log_cls['f1'], 3)} vs. logística",
-    border=True,
-    help=f"Umbral 0,50. Precisión {fmt_pct(rf_cls['precision'])}, sensibilidad {fmt_pct(rf_cls['recall'])}.",
-)
-cols[4].metric(
-    "Silueta · K-Means",
-    fmt_number(clu["silhouette_validation"], 3),
-    f"K = {clu['k']} grupos",
-    delta_color="off",
-    delta_arrow="off",
-    border=True,
-    help="K-Means sobre siete variables estandarizadas. Separación moderada (−1 a 1).",
+    monthly["mean_lead_time"],
 )
 
 segment_rates = (
@@ -153,81 +128,80 @@ lead = selection.select(
     pl.col("is_canceled").filter(pl.col("lead_time") > 180).mean().alias("long"),
     pl.col("is_canceled").filter(pl.col("lead_time") <= 30).mean().alias("short"),
 ).row(0, named=True)
-with st.container(border=True):
-    st.markdown("**Lectura rápida**")
-    lines = [
-        f"- De cada 100 reservas seleccionadas se cancelan **{fmt_number((current.cancel_rate or 0) * 100, 0)}**."
-    ]
-    if lead["long"] is not None and lead["short"] is not None:
-        lines.append(
-            f"- Con más de 180 días de anticipación la cancelación llega a **{fmt_pct(lead['long'])}**, "
-            f"frente a **{fmt_pct(lead['short'])}** en reservas hechas con un mes o menos."
+tiles = []
+if lead["long"] is not None and lead["short"] is not None:
+    tiles.append(
+        tile(
+            fmt_pct(lead["long"], 0),
+            f"cancela con <b>&gt; 180 días</b> de<br>anticipación ({fmt_pct(lead['short'], 0)} con ≤ 30)",
+            "risk",
+            "trending_up",
         )
-    if not segment_rates.is_empty():
-        top = segment_rates.row(0, named=True)
-        lines.append(
-            f"- El segmento con mayor tasa es **{config.label('market_segment', top['market_segment'])}** "
-            f"({fmt_pct(top['rate'])} de {fmt_number(top['n'])} reservas)."
+    )
+if not segment_rates.is_empty():
+    top = segment_rates.row(0, named=True)
+    tiles.append(
+        tile(
+            fmt_pct(top["rate"], 0),
+            f"<b>{config.label('market_segment', top['market_segment'])}</b> es el segmento<br>que más cancela",
+            "violet",
+            "groups",
         )
-    if current.revenue:
-        lines.append(
-            f"- Las cancelaciones equivalen a **{fmt_pct(current.lost_revenue / (current.revenue + current.lost_revenue))}** "
-            "del valor total reservado (ADR × noches)."
+    )
+if current.revenue:
+    tiles.append(
+        tile(
+            fmt_pct(current.lost_revenue / (current.revenue + current.lost_revenue), 0),
+            "del valor reservado<br>corresponde a <b>reservas canceladas</b>",
+            "loss",
+            "money_off",
         )
-    st.markdown("\n".join(lines))
+    )
+if tiles:
+    for col, html in zip(st.columns(len(tiles)), tiles, strict=True):
+        col.markdown(html, unsafe_allow_html=True)
 
-demand, cancellations, rates, table = st.tabs(["Demanda", "Cancelaciones", "Tarifas", "Datos"])
+hotel_rates = dict(
+    selection.group_by(pl.col("hotel").cast(pl.String)).agg(pl.col("is_canceled").mean()).iter_rows()
+)
+rate_title = None
+if len(hotel_rates) == 2:
+    riskier = max(hotel_rates, key=hotel_rates.get)
+    rate_title = f"El {charts.hotel_short(riskier)} cancela más"
+
+demand, cancellations, rates, table = st.tabs(
+    [
+        ":material/show_chart: Demanda",
+        ":material/event_busy: Cancelaciones",
+        ":material/sell: Tarifas",
+        ":material/table: Datos",
+    ]
+)
 with demand:
     left, right = st.columns(2, gap="medium")
-    with left, st.container(border=True):
-        plot(charts.monthly_series(selection, "bookings"))
-        st.caption(
-            "El hotel urbano concentra dos tercios del volumen; ambos hoteles crecen en primavera y verano."
-        )
-    with right, st.container(border=True):
-        plot(charts.monthly_series(selection, "rate"))
-        st.caption(
-            "En el conjunto completo, el hotel urbano cancela más que el vacacional en 24 de los 26 meses (42 % frente a 28 %)."
-        )
+    with left, card("monthly-bookings"):
+        plot(charts.monthly_series(selection, "bookings", "Primavera y verano concentran la demanda"))
+    with right, card("monthly-rate"):
+        plot(charts.monthly_series(selection, "rate", rate_title))
 
 with cancellations:
     left, right = st.columns(2, gap="medium")
-    with left, st.container(border=True):
+    with left, card("lead"):
         plot(charts.rate_by_lead_time(selection))
-        st.caption(
-            "Cuanto antes se reserva, más probable es cancelar: la anticipación es el principal factor del modelo."
-        )
-    with right, st.container(border=True):
-        plot(charts.rate_by_category(selection, "market_segment", "Cancelación por segmento de mercado"))
-        st.caption("Se omiten categorías con menos de 30 reservas en la selección.")
+    with right, card("segment"):
+        plot(charts.rate_by_category(selection, "market_segment", "{top}: el segmento que más cancela"))
     left, right = st.columns(2, gap="medium")
-    with left, st.container(border=True):
-        plot(
-            charts.rate_by_category(selection, "deposit_type", "Cancelación por tipo de depósito", height=260)
-        )
-        st.caption(
-            "Las reservas no reembolsables se cancelan casi siempre, una anomalía ya señalada en la Fase 1; por eso el depósito no se usa como predictor."
-        )
-    with right, st.container(border=True):
-        plot(
-            charts.rate_by_category(selection, "customer_type", "Cancelación por tipo de cliente", height=260)
-        )
-        st.caption(
-            "El tipo de cliente es, junto con la anticipación, la variable que más pesa en el modelo de cancelación."
-        )
+    with left, card("deposit"):
+        plot(charts.rate_by_category(selection, "deposit_type", "Depósito: «{top}» cancela más", height=260))
+    with right, card("customer"):
+        plot(charts.rate_by_category(selection, "customer_type", "Cliente: «{top}» cancela más", height=260))
 
 with rates:
     left, right = st.columns(2, gap="medium")
-    with left, st.container(border=True):
+    with left, card("adr-month"):
         plot(charts.adr_by_month_of_year(selection))
-        st.caption(
-            "En el conjunto completo, la mediana del hotel vacacional pasa de unos 50 en invierno a 180 en agosto; la del urbano oscila entre 80 y 120."
-        )
-    with right, st.container(border=True):
-        plot(
-            charts.adr_by_category(selection, "reserved_room_type", "Tarifa por tipo de habitación reservada")
-        )
-        st.caption("Cajas: mediana y rango intercuartílico de la ADR de reservas mantenidas.")
+    with right, card("adr-room"):
+        plot(charts.adr_by_category(selection, "reserved_room_type", "{top}: la tarifa más alta"))
 
 with table:
     columns = [
@@ -266,9 +240,7 @@ with table:
             "adr": st.column_config.NumberColumn("ADR", format="%.2f"),
         },
     )
-    st.caption(
-        f"Primeras 1.000 filas de {fmt_number(selection.height)}. Valores en el formato original de la fuente."
-    )
+    st.caption(f"Primeras 1.000 de {fmt_number(selection.height)} filas")
     st.download_button(
         "Descargar selección (CSV)",
         selection.drop("pc1", "pc2", "pc3").write_csv().encode("utf-8"),
@@ -276,3 +248,69 @@ with table:
         mime="text/csv",
         icon=":material/download:",
     )
+
+reg = metrics["regression"]["metrics"]
+cls = metrics["classification"]["metrics"]
+clu = metrics["clustering"]
+rf_reg, lin_reg = reg["random_forest"]["validation"], reg["linear"]["validation"]
+rf_cls, log_cls = cls["random_forest"]["validation"], cls["logistic"]["validation"]
+
+
+def signed(value: float, decimals: int) -> str:
+    """Number with an explicit sign."""
+    return ("+" if value > 0 else "") + fmt_number(value, decimals)
+
+
+section("Modelos", "model_training", "validación · Random Forest y K-Means")
+cols = st.container(key="krow5").columns(5)
+kpi(
+    cols[0],
+    "r2",
+    "R² tarifa",
+    fmt_number(rf_reg["r2"], 3),
+    "warm",
+    "sell",
+    "Random Forest. Proporción de la varianza de la ADR explicada (9.299 reservas mantenidas).",
+    f"{signed(rf_reg['r2'] - lin_reg['r2'], 3)} vs. lineal",
+)
+kpi(
+    cols[1],
+    "rmse",
+    "RMSE tarifa",
+    fmt_number(rf_reg["rmse"], 2),
+    "warm",
+    "straighten",
+    "Raíz del error cuadrático medio, en u.m. por noche.",
+    f"{signed(rf_reg['rmse'] - lin_reg['rmse'], 2)} vs. lineal",
+)
+kpi(
+    cols[2],
+    "auc",
+    "AUC cancelación",
+    fmt_number(rf_cls["roc_auc"], 3),
+    "brand",
+    "target",
+    "Random Forest. Capacidad de ordenar reservas por riesgo (0,5 = azar; 14.821 reservas).",
+    f"{signed(rf_cls['roc_auc'] - log_cls['roc_auc'], 3)} vs. logística",
+)
+kpi(
+    cols[3],
+    "f1",
+    "F1 cancelación",
+    fmt_number(rf_cls["f1"], 3),
+    "brand",
+    "balance",
+    f"Umbral 0,50. Precisión {fmt_pct(rf_cls['precision'])}, sensibilidad {fmt_pct(rf_cls['recall'])}.",
+    f"{signed(rf_cls['f1'] - log_cls['f1'], 3)} vs. logística",
+)
+kpi(
+    cols[4],
+    "sil",
+    "Silueta K-Means",
+    fmt_number(clu["silhouette_validation"], 3),
+    "violet",
+    "bubble_chart",
+    "K-Means sobre siete variables estandarizadas. Separación moderada (−1 a 1).",
+    f"K = {clu['k']} grupos",
+    arrow=False,
+)

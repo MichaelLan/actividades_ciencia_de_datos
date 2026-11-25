@@ -3,10 +3,20 @@
 import polars as pl
 import streamlit as st
 
-from hotel_dashboard import charts, config, modeling, theme
+from hotel_dashboard import charts, config, modeling
 from hotel_dashboard.data import load_bookings, load_metrics
 from hotel_dashboard.kpis import fmt_number, fmt_pct
-from hotel_dashboard.ui import get_models, header, plot, segment_chip
+from hotel_dashboard.ui import (
+    card,
+    chip,
+    get_models,
+    header,
+    kpi,
+    plot,
+    segment_card,
+    segment_chip,
+    segment_color,
+)
 
 MAX_POINTS = 6000
 MIN_POINTS_PER_SEGMENT = 150
@@ -16,11 +26,13 @@ selection: pl.DataFrame = st.session_state.get("selection", bookings)
 metrics = load_metrics()["clustering"]
 
 header(
-    "Aprendizaje no supervisado",
     "Perfiles de reserva",
-    f"K-Means con K = {metrics['k']} agrupa las reservas según anticipación, composición de "
-    "huéspedes, noches e historial (siete variables estandarizadas). Dos perfiles concentran "
-    "más del 90 % de la demanda; los otros cuatro son nichos con comportamientos extremos.",
+    "Seis segmentos según anticipación, huéspedes, noches e historial",
+    "bubble_chart",
+    [
+        chip(f"K-Means · <b>K = {metrics['k']}</b>", "hub"),
+        chip(f"<b>{fmt_number(selection.height)}</b> reservas", "calendar_month"),
+    ],
 )
 
 if selection.is_empty():
@@ -65,29 +77,26 @@ lookup = {row["segment"]: row for row in summary.iter_rows(named=True)}
 for start in (0, 3):
     cols = st.columns(3)
     for col, key in zip(cols, config.SEGMENT_ORDER[start : start + 3], strict=True):
-        info = config.SEGMENTS[key]
         row = lookup.get(key)
-        color = theme.CATEGORICAL[config.SEGMENT_ORDER.index(key)]
-        with col, st.container(border=True, height="stretch"):
-            st.markdown(f"{segment_chip(color)}**{info['name']}**", unsafe_allow_html=True)
-            if row is None:
-                st.caption("Sin reservas en la selección actual.")
-                continue
+        if row is None:
+            stats = [("Reservas", "—")]
+        else:
             adr = fmt_number(row["adr"], 0) if row["adr"] is not None else "—"
-            st.markdown(
-                f"{fmt_number(row['size'])} reservas · **{fmt_pct(row['size'] / total)}**  \n"
-                f"Cancelación **{fmt_pct(row['cancel_rate'])}** · ADR media **{adr}**"
-            )
-            st.caption(info["description"])
+            stats = [
+                ("Volumen", fmt_pct(row["size"] / total, 1)),
+                ("Cancelación", fmt_pct(row["cancel_rate"], 0)),
+                ("ADR", adr),
+            ]
+        col.markdown(segment_card(key, stats), unsafe_allow_html=True)
 
 booking = st.session_state.get("booking")
 coords = None
 if booking is not None:
     booking_segment, coords = modeling.assign_segment(get_models().segmentation, booking)
 
-map_col, side_col = st.columns([8, 4], gap="medium")
-with map_col, st.container(border=True):
-    controls = st.columns([3, 4], vertical_alignment="center")
+map_col, side_col = st.columns([7, 4], gap="medium")
+with map_col, card("map"):
+    controls = st.columns([2, 5, 1], vertical_alignment="center")
     with controls[0]:
         view = st.segmented_control(
             "Vista",
@@ -99,49 +108,53 @@ with map_col, st.container(border=True):
         )
     with controls[1]:
         show_booking = st.toggle(
-            "Mostrar la reserva del simulador",
+            "Reserva del simulador",
             value=booking is not None,
             disabled=booking is None,
             key="seg_show_booking",
+            help="Marca negra: la reserva configurada en la página Predicción.",
         )
     sample = balanced_sample(selection)
+    explained = sum(metrics["pca_explained_variance"][: 3 if view == "3D" else 2])
+    with controls[2], st.popover("", icon=":material/info:"):
+        st.markdown(
+            f"{fmt_number(sample.height)} reservas muestreadas de {fmt_number(selection.height)}; los "
+            f"segmentos pequeños se sobrerrepresentan (mínimo {MIN_POINTS_PER_SEGMENT}). Los ejes explican "
+            f"el {fmt_pct(explained, 0)} de la varianza: los grupos se separan mejor en las siete "
+            "dimensiones originales que en esta proyección."
+        )
     plot(
         charts.segment_scatter(
             sample, view == "3D", coords if show_booking else None, metrics["pca_explained_variance"]
         ),
         key="pca_map",
     )
-    explained = sum(metrics["pca_explained_variance"][: 3 if view == "3D" else 2])
-    st.caption(
-        f"{fmt_number(sample.height)} reservas muestreadas de {fmt_number(selection.height)}; los segmentos "
-        f"pequeños se sobrerrepresentan (mínimo {MIN_POINTS_PER_SEGMENT}) para que sean visibles. "
-        f"Los ejes explican el {fmt_pct(explained, 0)} de la varianza: los grupos se separan mejor en "
-        "las siete dimensiones originales que en esta proyección."
-    )
     if booking is not None and show_booking:
-        st.caption(
-            f"La reserva simulada (marcador negro) pertenece a **{config.SEGMENTS[booking_segment]['name']}**."
+        st.markdown(
+            f"{segment_chip(segment_color(booking_segment))} Reserva simulada → "
+            f"**{config.SEGMENTS[booking_segment]['name']}**",
+            unsafe_allow_html=True,
         )
 
 with side_col:
-    with st.container(border=True):
+    with card("sizes"):
         plot(charts.segment_sizes(selection), key="sizes")
-        st.caption("Escala logarítmica: los nichos tienen cientos de reservas frente a decenas de miles.")
-    with st.container(border=True):
-        st.markdown("**Calidad del agrupamiento**")
-        a, b = st.columns(2)
-        a.metric("Silueta (entren.)", fmt_number(metrics["silhouette_train"], 3))
-        b.metric("Silueta (valid.)", fmt_number(metrics["silhouette_validation"], 3))
-        st.caption("Separación moderada y estable entre particiones.")
-
-with st.container(border=True):
-    plot(charts.profile_heatmap(summary), key="profile")
-    st.caption(
-        "El número de cada celda es la media del segmento; el color indica cuántas desviaciones "
-        "estándar se aleja de la media ponderada de todos los segmentos (rojo: por encima; azul: por debajo)."
+    kpi(
+        st.container(),
+        "sil",
+        "Silueta (validación)",
+        fmt_number(metrics["silhouette_validation"], 3),
+        "violet",
+        "hub",
+        "Coeficiente de silueta (−1 a 1) en muestras de 2.500 reservas: separación moderada y estable.",
+        f"entrenamiento {fmt_number(metrics['silhouette_train'], 3)}",
+        arrow=False,
     )
 
-with st.expander("Tabla de perfiles (media y mediana)", icon=":material/table:"):
+with card("profile"):
+    plot(charts.profile_heatmap(summary), key="profile")
+
+with st.expander("Tabla de perfiles y notas", icon=":material/table:"):
     table = summary.select(
         pl.col("segment")
         .cast(pl.String)
@@ -158,4 +171,14 @@ with st.expander("Tabla de perfiles (media y mediana)", icon=":material/table:")
         ],
     )
     st.dataframe(table, hide_index=True)
-    st.caption("Columnas de perfil: media / mediana sobre la selección filtrada.")
+    st.caption(
+        "Columnas de perfil: media / mediana sobre la selección filtrada. En el mapa de calor, el número es "
+        "la media del segmento y el color, cuántas desviaciones típicas se aleja de la media ponderada "
+        "(rojo: por encima; azul: por debajo). Tamaños en escala logarítmica."
+    )
+    for key in config.SEGMENT_ORDER:
+        info = config.SEGMENTS[key]
+        st.markdown(
+            f"{segment_chip(segment_color(key))} **{info['name']}** · {info['description']}",
+            unsafe_allow_html=True,
+        )
